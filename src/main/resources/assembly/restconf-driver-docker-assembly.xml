@@ -1,0 +1,24 @@
+<assembly>
+	<id>docker</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>${project.build.directory}/docker-ready</directory>
+			<outputDirectory></outputDirectory>
+            <includes>
+                <include>*.sh</include>
+            </includes>
+            <fileMode>0755</fileMode>
+        </fileSet>
+		<fileSet>
+			<directory>${project.build.directory}/docker-ready</directory>
+			<outputDirectory></outputDirectory>
+			<excludes>
+                <exclude>*.sh</exclude>
+            </excludes>
+		</fileSet>
+	</fileSets>
+</assembly>

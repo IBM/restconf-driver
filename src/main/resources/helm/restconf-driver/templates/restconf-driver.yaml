@@ -1,0 +1,116 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: restconf-driver
+data:
+{{- if .Values.app.config.env }}
+{{ toYaml .Values.app.config.env | indent 2 }}
+{{- end }}
+  "alm_vnfmdriver_config_name": {{ .Values.app.config.rmName }}
+  "spring_profiles_include": "prod,kubernetes"
+  "spring_profiles_active": {{ .Values.app.config.profiles }}
+  "LOG_FOLDER": "/var/lm/logs"
+{{- if .Values.app.config.packageRepositoryUrl }}
+  "vnfmdriver_packageManagement_packageRepositoryUrl": {{ .Values.app.config.packageRepositoryUrl }}
+{{- end }}
+{{- if .Values.app.config.repositoryName }}
+  "vnfmdriver_packageManagement_repositoryName": {{ .Values.app.config.repositoryName }}
+{{- end }}
+{{- if .Values.app.config.nexusGroupName }}
+  "vnfmdriver_packageManagement_nexusGroupName": {{ .Values.app.config.nexusGroupName }}
+{{- end }}
+{{- if .Values.app.config.authenticationProperties }}
+{{- if .Values.app.config.authenticationProperties.type }}
+  "vnfmdriver_packageManagement_authenticationProperties_type": {{ .Values.app.config.authenticationProperties.type }}
+{{- end }}
+{{- if .Values.app.config.authenticationProperties.username }}
+  "vnfmdriver_packageManagement_authenticationProperties_username": {{ .Values.app.config.authenticationProperties.username }}
+{{- end }}
+{{- if .Values.app.config.authenticationProperties.password }}
+  "vnfmdriver_packageManagement_authenticationProperties_password": {{ .Values.app.config.authenticationProperties.password }}
+{{- end }}
+{{- end }}
+{{- if .Values.app.jvmOptions }}
+  "JVM_OPTIONS": {{ .Values.app.jvmOptions }}
+{{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: restconf-driver
+  labels:
+    app: restconf-driver
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - port: 8296
+    targetPort: 8296
+{{- if eq .Values.service.type "NodePort" }}
+    nodePort: {{ .Values.service.nodePort }}
+{{- end }}
+    protocol: TCP
+    name: http
+  selector:
+    app: restconf-driver
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: restconf-driver
+spec:
+  replicas: {{ .Values.app.numReplicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: restconf-driver
+        part-of: lm
+    spec:
+{{- if .Values.app.affinity }}
+      affinity:
+{{ toYaml .Values.app.affinity | indent 8 }}
+{{- end }}
+{{- if .Values.app.tolerations }}
+      tolerations:
+{{ toYaml .Values.app.tolerations | indent 8 }}
+{{- end }}
+      containers:
+        - name: restconf-driver
+{{- if .Values.global.docker.registryEnabled }}
+          image: {{ .Values.global.docker.registryIp }}:{{ .Values.global.docker.registryPort }}/{{ .Values.docker.image }}:{{ .Values.docker.version }}
+          imagePullPolicy: {{ .Values.global.docker.imagePullPolicy }}
+{{- else }}
+          image: {{ .Values.docker.image }}:{{ .Values.docker.version }}
+          imagePullPolicy: {{ .Values.docker.imagePullPolicy }}
+{{- end }}
+          securityContext:
+            # run as sld
+            runAsUser: 1000
+          ports:
+          - containerPort: 8296
+            protocol: TCP
+          livenessProbe:
+            failureThreshold: {{ .Values.app.livenessProbe.failureThreshold }}
+            httpGet:
+              path: /management/health
+              port: 8296
+              scheme: HTTP
+            initialDelaySeconds: {{ .Values.app.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.app.livenessProbe.periodSeconds }}
+          readinessProbe:
+            failureThreshold: {{ .Values.app.readinessProbe.failureThreshold }}
+            httpGet:
+              path: /management/health
+              port: 8296
+              scheme: HTTP
+            initialDelaySeconds: {{ .Values.app.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.app.readinessProbe.periodSeconds }}
+          envFrom:
+          - configMapRef:
+              name: restconf-driver
+          resources:
+{{ toYaml .Values.app.resources | indent 12 }}

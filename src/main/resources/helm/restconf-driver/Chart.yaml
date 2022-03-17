@@ -1,0 +1,19 @@
+name: restconf-driver
+version: #project.version#
+apiVersion: v1
+description: A Helm chart for the restconf
+maintainers:
+- name: Accanto Systems
+  email: containers@accantosystems.com
+icon: http://www.accantosystems.com/wp-content/uploads/2017/06/Accanto-w_white-systems200px.png
+keywords:
+- LM
+- ALM
+- SLM
+- Lifecycle
+- Accanto
+- ETSI
+- restconf
+- VNFM
+- Driver
+engine: gotpl

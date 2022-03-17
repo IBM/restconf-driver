@@ -1,0 +1,22 @@
+<dynamic>
+    <nssi>demo-slice2</nssi>
+    <l3>
+        <auto-rt/>
+        <as-number>64001</as-number>
+        <endpoint>
+            <pe>atlanta-regional-pe</pe>
+            <interface>
+                <if-type>TenGigE</if-type>
+                <if-id>0/0/0/10.402</if-id>
+                <pe-ip-addr>172.16.2.1/29</pe-ip-addr>
+                <ce-pe-prot>
+                    <e-bgp>
+                        <neighbor-ipv4>172.16.2.2</neighbor-ipv4>
+                        <remote-as-ipv4>65102</remote-as-ipv4>
+                    </e-bgp>
+                </ce-pe-prot>
+            </interface>
+        </endpoint>
+    </l3>
+    <nsst>eMBB</nsst>
+</dynamic>
