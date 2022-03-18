@@ -1,6 +1,10 @@
 ## Global settings used across all of the LM sub-charts
 global:
-
+  # While the driver pod can run within Openshift's restricted SCC, if
+  # another SCC is applied to the pod via a service account that doesn't support
+  # the correct runAsUser type (i.e. MustRunAsNonRoot), arbitraryUids can be
+  # disabled. Otherwise, the default value (true) shouldn't need to be updated.
+  arbitraryUids: true
   ## Global Docker
   ## Enable the use of a Docker Registry to pull the application Docker Image.
   ## If registry_enabled is true then the image reference will be: global.docker.registryIp:global.docker.registryPort/docker.image:docker.version
@@ -10,48 +14,41 @@ global:
     imagePullPolicy: Always
     registryIp: "registry_ip"
     registryPort: 5000
-
   config:
     ## Label used to decide the version of configuration to read from cloud-config server
     cloudLabel: "master"
-    
   ## Security
   ## Enable the use of LM security features
   security:
     enabled: false
-
 ## Docker
 docker:
   ## Name of the Docker Image
-  image: accanto/restconf-driver
+  image: ibmcom/restconf-driver
   ## Tagged version of the Docker Image
   version: #project.version#
   ## Pull policy on the Docker Image (when global.docker.registryEnabled is false)
   imagePullPolicy: IfNotPresent
-
 ## Application
 app:
   ## Number of pods to install
   numReplicas: 1
-  
   config:
     ## Runtime Profiles
     ## Included runtime profiles of the application (spring_profiles_active)
     ## Options:
     ##    - swagger: add this option to enabled swagger documentation endpoint on the application
     profiles:
-    
-    ## RM Name referenced by LM as the "type" of this RM when onboarded 
+    ## RM Name referenced by LM as the "type" of this RM when onboarded
     rmName: Not_configured
-    
     ## The URL where the VNF packages are stored, such as an HTTP target or an FTP target
     ## e.g. 'http://hostname/path/{vnfPackageId}'
     # packageRepositoryUrl:
-    
     ## Environment Options
     ## Add environment variables to the pods
-    # env: 
-    
+    # env:
+  ## secret containing client certificates that are to be trusted
+  certificateSecret:
   ## Probe configuration for checking Application availability
   livenessProbe:
     failureThreshold: 3
@@ -61,7 +58,6 @@ app:
     failureThreshold: 3
     initialDelaySeconds: 20
     periodSeconds: 10
-  
   ## Affinity for pod assignment
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   affinity:
@@ -86,7 +82,6 @@ app:
     #        operator: In
     #        values:
     #        - "True"
-    
   ## Node tolerations for pod assignment
   ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   tolerations: []
@@ -94,11 +89,9 @@ app:
   #- key: ReservedForLm
   #  operator: Exists
   #  effect: NoSchedule
-
   ## JVM Options
   ## Options to pass to the JVM when running the application
   # jvmOptions: -Xmx384m
-
   ## Configure resource requests and limits for each container of the application
   ## Default is to have no limit
   ## NOTE: when setting the limit you should consider the -Xmx value passed in app.jvmOptions. If this is higher than the limit below then the application is likely to fail
@@ -110,8 +103,7 @@ app:
     # requests:
     #  cpu: 250m
     #  memory: 384Mi
-
-## Service Configuration 
+## Service Configuration
 ## Define how this application is accessed internally (and potentially externally)
 service:
   type: ClusterIP
