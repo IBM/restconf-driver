@@ -1,0 +1,30 @@
+management:
+    endpoints:
+        web:
+            base-path: /management
+            exposure:
+                include: "*"
+    metrics:
+        export:
+            graphite:
+                enabled: false
+            prometheus:
+                enabled: true
+            simple:
+                enabled: false
+
+spring:
+  main:
+    banner-mode: "off"
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: 8196
+  
+rcdriver:
+  topics:
+    lcmOpOccPollingTopic: lcm_op_occ_polling_requests
+    lifecycleResponsesTopic: lm_vnfc_lifecycle_execution_events
+
