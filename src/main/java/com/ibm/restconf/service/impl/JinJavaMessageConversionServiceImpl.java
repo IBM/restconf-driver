@@ -86,43 +86,18 @@ public class JinJavaMessageConversionServiceImpl implements MessageConversionSer
         return context;
     }
 
-    private List<String> findPropertyListFromTemplate(ExecutionRequest executionRequest, String templateFile) throws IOException {
+    private List<String> findPropertyListFromTemplate(ExecutionRequest executionRequest, String templateFile) {
         List<String> list = new ArrayList<>();
-        String templateContents = FileUtils.getFileFromLifecycleScripts(executionRequest.getDriverFiles(), TEMPLATE_PATH + templateFile);
-        if(templateContents == null) {
-            try (InputStream inputStream = JinJavaMessageConversionServiceImpl.class.getResourceAsStream("/" + TEMPLATE_PATH + "/" + templateFile)) {
-                if (inputStream != null) {
-                    BufferedReader read = new BufferedReader(
-                            new InputStreamReader(inputStream));
-                    Pattern pattern = Pattern.compile("\\{\\{(.*?)}}");
-                    String line;
-                    while ((line = read.readLine()) != null) {
-                        logger.debug("line {}", line);
-                        Matcher match = pattern.matcher(line);
-                        while (match.find()) {
-                            list.add(extractProperty(match, line));
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                logger.error("Exception raised looking up default lifecycle script", e);
-                throw new FileNotFoundException("Default template not found");
-            }
-        } else {
-            Pattern pattern = Pattern.compile("\\{\\{(.*?)}}");
-            Matcher match = pattern.matcher(templateContents);
-            while(match.find()) {
-                list.add(extractProperty(match,templateContents));
-            }
+        final String templateContents = getTemplateFromExecutionRequest(executionRequest, templateFile);
+        Pattern pattern = Pattern.compile("\\{\\{(.*?)}}");
+        Matcher match = pattern.matcher(templateContents);
+        while(match.find()) {
+            int start = match.start(0);
+            int end = match.end(0);
+            String extractedProperty = templateContents.substring(start + 2, end - 2);
+            logger.debug("Extracted property {}", extractedProperty);
+            list.add(extractedProperty);
         }
         return list;
-    }
-
-    private String extractProperty(Matcher match, String contents) {
-        int start = match.start(0);
-        int end = match.end(0);
-        String extractedProperty = contents.substring(start + 2, end - 2);
-        logger.debug("Extracted property {}", extractedProperty);
-        return extractedProperty;
     }
 }
