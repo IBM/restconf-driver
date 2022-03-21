@@ -58,10 +58,7 @@ public class JinJavaMessageConversionServiceImpl implements MessageConversionSer
             } catch (IOException e) {
                 logger.error("Exception raised looking up default lifecycle script", e);
             }
-        } else {
-            logger.error("Could not read template file, inputstream is null");
         }
-
         if (templateContents != null) {
             return templateContents;
         } else {
@@ -80,7 +77,7 @@ public class JinJavaMessageConversionServiceImpl implements MessageConversionSer
             if (value == null) {
                 throw new MissingPropertyException("Missing value for resource property: " + property);
             }
-            context.put(property, resourceProperties.get(property));
+            context.put(property, value);
         });
         return context;
     }

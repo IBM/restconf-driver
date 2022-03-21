@@ -210,8 +210,8 @@ public class CiscoCncServiceDriver {
         Map<String, Object> deploymentLocationProperties = executionRequest.getDeploymentLocation().getProperties();
         String apiContext = (String)deploymentLocationProperties.get(API_CONTEXT);
         String apiSlices = (String)deploymentLocationProperties.get(API_SLICES);
-        final String url = executionRequest.getProperties().get(RC_SERVER_URL) + apiContext + apiSlices;
-
+        final String url = deploymentLocationProperties.get(RC_SERVER_URL) + apiContext + apiSlices;
+        logger.debug("url = {}", url);
         final HttpHeaders headers = getHttpHeaders(jwt);
         headers.setContentType(getContentType(executionRequest));
         headers.setAccept(Arrays.asList(MediaType.ALL));
