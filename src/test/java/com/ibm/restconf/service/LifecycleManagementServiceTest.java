@@ -1,6 +1,7 @@
 package com.ibm.restconf.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ibm.restconf.config.RCDriverProperties;
 import com.ibm.restconf.driver.CiscoCncServiceDriver;
 import com.ibm.restconf.model.ExecutionAcceptedResponse;
 import com.ibm.restconf.model.ExecutionRequest;
@@ -31,13 +32,18 @@ public class LifecycleManagementServiceTest {
     CiscoCncServiceDriver mockDriver;
     @MockBean
     MessageConversionService messageConversionService;
+    @MockBean
+    ExternalMessagingService mockExternalMessagingService;
+    @MockBean
+    RCDriverProperties mockRCDriverProperties;
+
 
 
     @Test
     public void testExecuteLifecycle() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        final LifecycleManagementService lifecycleManagementService = new LifecycleManagementService(mockDriver,  mockAuthDriver, messageConversionService);
+        final LifecycleManagementService lifecycleManagementService = new LifecycleManagementService(mockDriver,  mockAuthDriver, messageConversionService, mockExternalMessagingService, mockRCDriverProperties);
         final ExecutionRequest executionRequest = new ExecutionRequest();
         executionRequest.setLifecycleName("Create");
         Map<String, ExecutionRequestPropertyValue> map = new HashMap<>();
@@ -64,7 +70,7 @@ public class LifecycleManagementServiceTest {
 
     @Test
     public void testExecuteLifecycleInvalidLifecycleName() {
-        final LifecycleManagementService lifecycleManagementService = new LifecycleManagementService(mockDriver,  mockAuthDriver, messageConversionService);
+        final LifecycleManagementService lifecycleManagementService = new LifecycleManagementService(mockDriver,  mockAuthDriver, messageConversionService, mockExternalMessagingService, mockRCDriverProperties);
         final ExecutionRequest executionRequest = new ExecutionRequest();
         executionRequest.setLifecycleName("Integrity");
         executionRequest.setDeploymentLocation(TEST_DL_NO_AUTH);
@@ -79,7 +85,7 @@ public class LifecycleManagementServiceTest {
 
     @Test
     public void testAuthorizationIssue() {
-        final LifecycleManagementService lifecycleManagementService = new LifecycleManagementService(mockDriver,  mockAuthDriver, messageConversionService);
+        final LifecycleManagementService lifecycleManagementService = new LifecycleManagementService(mockDriver,  mockAuthDriver, messageConversionService, mockExternalMessagingService, mockRCDriverProperties);
         final ExecutionRequest executionRequest = new ExecutionRequest();
         executionRequest.setLifecycleName("Integrity");
         executionRequest.setDeploymentLocation(TEST_DL_NO_AUTH);
