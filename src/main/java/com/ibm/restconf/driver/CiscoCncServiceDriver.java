@@ -94,7 +94,13 @@ public class CiscoCncServiceDriver {
         final HttpHeaders headers = getHttpHeaders( null);
         headers.setContentType(MediaType.parseMediaType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
         headers.setAccept(Arrays.asList(MediaType.parseMediaType(MediaType.TEXT_PLAIN_VALUE)));
-        String payload = "username="+username +"password="+password;
+        StringBuilder builder = new StringBuilder();
+        builder.append("username=");
+        builder.append(username);
+        builder.append("&");
+        builder.append("password=");
+        builder.append(password);
+        String payload = builder.toString();
 
         final HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
 

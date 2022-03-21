@@ -43,8 +43,8 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-  - port: 8296
-    targetPort: 8296
+  - port: 8196
+    targetPort: 8196
 {{- if eq .Values.service.type "NodePort" }}
     nodePort: {{ .Values.service.nodePort }}
 {{- end }}
@@ -96,13 +96,13 @@ spec:
             runAsUser: 1000
           {{- end }}
           ports:
-          - containerPort: 8296
+          - containerPort: 8196
             protocol: TCP
           livenessProbe:
             failureThreshold: {{ .Values.app.livenessProbe.failureThreshold }}
             httpGet:
               path: /management/health
-              port: 8296
+              port: 8196
               scheme: HTTP
             initialDelaySeconds: {{ .Values.app.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.app.livenessProbe.periodSeconds }}
@@ -110,7 +110,7 @@ spec:
             failureThreshold: {{ .Values.app.readinessProbe.failureThreshold }}
             httpGet:
               path: /management/health
-              port: 8296
+              port: 8196
               scheme: HTTP
             initialDelaySeconds: {{ .Values.app.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.app.readinessProbe.periodSeconds }}
