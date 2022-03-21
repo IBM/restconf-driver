@@ -27,7 +27,7 @@ logging:
   level:
     root: ERROR
     org.springframework.web: ERROR
-    com.ibm.restconf.service: DEBUG
+    com.ibm.restconf: DEBUG
 
 rcdriver:
   topics:
