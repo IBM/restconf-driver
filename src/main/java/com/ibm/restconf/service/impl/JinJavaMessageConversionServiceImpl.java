@@ -37,7 +37,7 @@ public class JinJavaMessageConversionServiceImpl implements MessageConversionSer
         logger.debug("template file from ExecutionRequest {} \n", template);
         final Jinjava jinjava = new Jinjava();
         try {
-            String returnVal = jinjava.render(template, createJinJavaContext(executionRequest, fullTemplateName));
+            String returnVal = jinjava.render(template, createJinJavaContext(executionRequest.getProperties(), template));
             logger.info("Message conversion script successfully run, returnVal is\n{}", returnVal);
             return returnVal;
         } catch (IOException e) {
@@ -70,10 +70,9 @@ public class JinJavaMessageConversionServiceImpl implements MessageConversionSer
     }
 
 
-    private Map<String,Object> createJinJavaContext(ExecutionRequest executionRequest, String templateFile) throws  IOException {
+    private Map<String,Object> createJinJavaContext(Map<String, Object> resourceProperties, String templateContents) throws  IOException {
         Map<String, Object> context = new HashMap<>();
-        Map<String, Object> resourceProperties = executionRequest.getProperties();
-        List<String> list = findPropertyListFromTemplate(executionRequest, templateFile);
+        List<String> list = findPropertyListFromTemplate(templateContents);
         logger.debug("list of properties in template {}", list);
         list.forEach(property -> {
             Object value = resourceProperties.get(property);
@@ -86,9 +85,8 @@ public class JinJavaMessageConversionServiceImpl implements MessageConversionSer
         return context;
     }
 
-    private List<String> findPropertyListFromTemplate(ExecutionRequest executionRequest, String templateFile) {
+    private List<String> findPropertyListFromTemplate(String templateContents) {
         List<String> list = new ArrayList<>();
-        final String templateContents = getTemplateFromExecutionRequest(executionRequest, templateFile);
         Pattern pattern = Pattern.compile("\\{\\{(.*?)}}");
         Matcher match = pattern.matcher(templateContents);
         while(match.find()) {
@@ -97,6 +95,9 @@ public class JinJavaMessageConversionServiceImpl implements MessageConversionSer
             String extractedProperty = templateContents.substring(start + 2, end - 2);
             logger.debug("Extracted property {}", extractedProperty);
             list.add(extractedProperty);
+        }
+        if(list.isEmpty()){
+            logger.debug("No properties extracted from the template {}", templateContents);
         }
         return list;
     }
