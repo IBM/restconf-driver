@@ -8,6 +8,9 @@ RUN groupadd -g 1000 -r sld \
  && chmod +x /data/*.sh \
  && mkdir /var/lm \
  && chown sld:sld /var/lm /data
+RUN apt update -y \
+ && apt upgrade -y \
+ && rm -rf /var/lib/apt/lists/*
 USER sld
 COPY restconf-driver-@project.version@.jar /data/restconf-driver-@project.version@.jar
 CMD sh /data/commands.sh
