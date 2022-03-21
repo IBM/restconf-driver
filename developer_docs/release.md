@@ -8,7 +8,26 @@ Ensure there is a milestone created for the release at: [https://github.com/IBM/
 
 Also ensure all issues going into this release are assigned to this milestone. **Move any issues from unreleased milestones into this release if the code has been merged**
 
-## 2. Merge Develop to Master
+## 2. Update version (on develop)
+
+Ensure the version in `pom.xml` starts with the corresponding version for the release.
+
+For example, if releasing `0.2.7`, ensure the `pom.xml` contains:
+
+```
+<version>0.2.7-SNAPSHOT</version>
+```
+
+This should have been done after the last release but it's good to check as the planned version may have changed (we expected to release a patch `0.2.7` but due to the nature of changes we've decided it's a minor release `0.3.0` instead)
+
+Commit and push these changes.
+
+## 3. Update CHANGELOG (on develop)
+
+Update the `CHANGELOG.md` file with a list of issues fixed by this release (see other items in this file to get an idea of the desired format).
+
+Commit and push these changes.
+## 4. Merge Develop to Master
 
 Development work is normally carried out on the `develop` branch. Merge this branch to `master`, by creating a PR.
 
@@ -16,7 +35,7 @@ Then perform the release from the `master` branch. This ensures the `master` bra
 
 > Note: do NOT delete the `develop` branch
 
-## 3. Build and Release (on master)  
+## 5. Build and Release (on master)  
 
 > Note: Make sure to pull-in the latest and correct tag required for the openjdk image locally before preparing the release build.  
 > e.g  
@@ -42,7 +61,7 @@ Verify that a helm chart is built in the `target/helm/repo` directory, e.g.
 ls target/helm/repo
 ```
 
-## 4. Release artifacts
+## 6. Release artifacts
 
 The Docker image not been pushed by the previous build step so must be done manually, e.g.
 ```
@@ -58,7 +77,7 @@ Complete the following:
 - Add release notes in the description of the release. Look at previous releases to see the format. Usually, we will list the issues fixed.
 - Attach the Helm chart `tgz` file produced by `mvnw` command in the `target/helm/repo` directory
 
-## 5. Cleanup
+## 7. Cleanup
 
 - Close the Milestone for this release on [Github](https://github.com/IBM/restconf-driver/milestones)
 - Create a new Milestone for next release (if one does not exist).
