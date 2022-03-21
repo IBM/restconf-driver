@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 public class JinJavaMessageConversionServiceImpl implements MessageConversionService {
 
     private static final Logger logger = LoggerFactory.getLogger(JinJavaMessageConversionServiceImpl.class);
-    private static final String TEMPLATE_PATH = "templates/";
+    private static final String TEMPLATE_PATH = "template/";
 
     @Override
     public String generateMessageFromRequest(String messageType, ExecutionRequest executionRequest) throws MessageConversionException {
@@ -32,11 +32,12 @@ public class JinJavaMessageConversionServiceImpl implements MessageConversionSer
         if(!StringUtils.isEmpty(contentType) && contentType.equalsIgnoreCase("json")){
             fullTemplateName = messageType+ ".json";
         }
-
+        logger.debug("fullTemplateName  {} \n", fullTemplateName);
         final String template = getTemplateFromExecutionRequest(executionRequest, fullTemplateName);
+        logger.debug("template file from ExecutionRequest {} \n", template);
         final Jinjava jinjava = new Jinjava();
         try {
-            String returnVal = jinjava.render(template, createJinJavaContext(executionRequest.getProperties(), fullTemplateName));
+            String returnVal = jinjava.render(template, createJinJavaContext(executionRequest.getProperties(), template));
             logger.info("Message conversion script successfully run, returnVal is\n{}", returnVal);
             return returnVal;
         } catch (IOException e) {
@@ -58,7 +59,6 @@ public class JinJavaMessageConversionServiceImpl implements MessageConversionSer
                 logger.error("Exception raised looking up default lifecycle script", e);
             }
         }
-
         if (templateContents != null) {
             return templateContents;
         } else {
@@ -67,41 +67,35 @@ public class JinJavaMessageConversionServiceImpl implements MessageConversionSer
     }
 
 
-    private Map<String,Object> createJinJavaContext(Map<String, Object> resourceProperties, String templateFile) throws  IOException {
-        List<String> list = findPropertyListFromTemplate(templateFile);
+    private Map<String,Object> createJinJavaContext(Map<String, Object> resourceProperties, String templateContents) throws  IOException {
         Map<String, Object> context = new HashMap<>();
+        List<String> list = findPropertyListFromTemplate(templateContents);
+        logger.debug("list of properties in template {}", list);
         list.forEach(property -> {
             Object value = resourceProperties.get(property);
-            if (value == null){
-                throw new MissingPropertyException("Missing value for resource property: "+ property);
+            logger.debug("property --> value  {} ---> {}", property, value);
+            if (value == null) {
+                throw new MissingPropertyException("Missing value for resource property: " + property);
             }
-            context.put(property, resourceProperties.get(property));
+            context.put(property, value);
         });
         return context;
     }
 
-    private List<String> findPropertyListFromTemplate(String templateFile) throws IOException {
+    private List<String> findPropertyListFromTemplate(String templateContents) {
         List<String> list = new ArrayList<>();
-        try (InputStream inputStream = JinJavaMessageConversionServiceImpl.class.getResourceAsStream("/" + TEMPLATE_PATH +  "/" + templateFile)) {
-            if (inputStream != null) {
-                BufferedReader read = new BufferedReader(
-                        new InputStreamReader(inputStream));
-                Pattern pattern = Pattern.compile("\\{\\{(.*?)}}");
-                String line;
-                while ((line = read.readLine()) != null) {
-                    Matcher match = pattern.matcher(line);
-                    while (match.find()) {
-                        int start = match.start(0);
-                        int end = match.end(0);
-                        list.add(line.substring(start+2, end-2));
-                    }
-                }
-            }
-        } catch (IOException e) {
-            logger.error("Exception raised looking up default lifecycle script", e);
-            throw new FileNotFoundException("Default template not found");
+        Pattern pattern = Pattern.compile("\\{\\{(.*?)}}");
+        Matcher match = pattern.matcher(templateContents);
+        while(match.find()) {
+            int start = match.start(0);
+            int end = match.end(0);
+            String extractedProperty = templateContents.substring(start + 2, end - 2);
+            logger.debug("Extracted property {}", extractedProperty);
+            list.add(extractedProperty);
         }
-
+        if(list.isEmpty()){
+            logger.debug("No properties extracted from the template {}", templateContents);
+        }
         return list;
     }
 }

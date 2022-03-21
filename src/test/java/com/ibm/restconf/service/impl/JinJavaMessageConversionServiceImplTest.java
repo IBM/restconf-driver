@@ -28,7 +28,7 @@ public class JinJavaMessageConversionServiceImplTest {
         executionRequest.setLifecycleName("Create");
         Map<String, ExecutionRequestPropertyValue> resourceProperties = new HashMap<>();
 
-        resourceProperties.put("slicename", new GenericExecutionRequestPropertyValue("demo-slice2"));
+        resourceProperties.put("sliceName", new GenericExecutionRequestPropertyValue("demo-slice2"));
         resourceProperties.put("asNumber", new GenericExecutionRequestPropertyValue(64001));
         resourceProperties.put("endpointPe", new GenericExecutionRequestPropertyValue("atlanta-regional-pe"));
         resourceProperties.put("ifType",new GenericExecutionRequestPropertyValue("TenGigE"));

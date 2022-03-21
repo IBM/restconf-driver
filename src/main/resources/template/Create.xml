@@ -1,5 +1,5 @@
 <dynamic>
-    <nssi>{{slicename}}</nssi>
+    <nssi>{{sliceName}}</nssi>
     <l3>
         <auto-rt/>
         <as-number>{{asNumber}}</as-number>

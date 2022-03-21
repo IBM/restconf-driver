@@ -20,13 +20,13 @@ Use lmctl for onboard the driver into LM. For full details on how to install or 
 The following command will onboard the RestConf Driver into a TNC-O (< 1.3) environment called 'dev01':
 
 ```bash
-lmctl lifecycledriver add --type restconf --url http://restconf-driver:8296 dev01
+lmctl lifecycledriver add --type restconf --url http://restconf-driver:8196 dev01
 ```
 
 For CP4NA 1.3 or greater, use the folowing command:
 
 ```bash
-lmctl resourcedriver add --type restconf --url http://restconf-driver:8296 dev01
+lmctl resourcedriver add --type restconf --url http://restconf-driver:8196 dev01
 ```
 
 **NOTES**:

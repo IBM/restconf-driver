@@ -94,7 +94,13 @@ public class CiscoCncServiceDriver {
         final HttpHeaders headers = getHttpHeaders( null);
         headers.setContentType(MediaType.parseMediaType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
         headers.setAccept(Arrays.asList(MediaType.parseMediaType(MediaType.TEXT_PLAIN_VALUE)));
-        String payload = "username="+username +"password="+password;
+        StringBuilder builder = new StringBuilder();
+        builder.append("username=");
+        builder.append(username);
+        builder.append("&");
+        builder.append("password=");
+        builder.append(password);
+        String payload = builder.toString();
 
         final HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
 
@@ -204,8 +210,8 @@ public class CiscoCncServiceDriver {
         Map<String, Object> deploymentLocationProperties = executionRequest.getDeploymentLocation().getProperties();
         String apiContext = (String)deploymentLocationProperties.get(API_CONTEXT);
         String apiSlices = (String)deploymentLocationProperties.get(API_SLICES);
-        final String url = executionRequest.getProperties().get(RC_SERVER_URL) + apiContext + apiSlices;
-
+        final String url = deploymentLocationProperties.get(RC_SERVER_URL) + apiContext + apiSlices;
+        logger.debug("url = {}", url);
         final HttpHeaders headers = getHttpHeaders(jwt);
         headers.setContentType(getContentType(executionRequest));
         headers.setAccept(Arrays.asList(MediaType.ALL));

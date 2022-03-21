@@ -8,7 +8,7 @@ data:
 {{- end }}
   "alm_vnfmdriver_config_name": {{ .Values.app.config.rmName }}
   "spring_profiles_include": "prod,kubernetes"
-  "spring_profiles_active": {{ .Values.app.config.profiles }}
+  "spring_profiles_active": {{ .Values.app.config.profiles | toString | quote }}
   "LOG_FOLDER": "/var/lm/logs"
 {{- if .Values.app.config.packageRepositoryUrl }}
   "vnfmdriver_packageManagement_packageRepositoryUrl": {{ .Values.app.config.packageRepositoryUrl }}
@@ -43,8 +43,8 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-  - port: 8296
-    targetPort: 8296
+  - port: 8196
+    targetPort: 8196
 {{- if eq .Values.service.type "NodePort" }}
     nodePort: {{ .Values.service.nodePort }}
 {{- end }}
@@ -53,12 +53,15 @@ spec:
   selector:
     app: restconf-driver
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: restconf-driver
 spec:
   replicas: {{ .Values.app.numReplicas }}
+  selector:
+    matchLabels:
+      app: restconf-driver
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -87,17 +90,19 @@ spec:
           image: {{ .Values.docker.image }}:{{ .Values.docker.version }}
           imagePullPolicy: {{ .Values.docker.imagePullPolicy }}
 {{- end }}
+          {{- if or (not (.Capabilities.APIVersions.Has "security.openshift.io/v1")) (eq .Release.Namespace "kube-system") (ne (toString .Values.global.arbitraryUids) "true") }}
           securityContext:
-            # run as sld
+            # run as sld user (1000)
             runAsUser: 1000
+          {{- end }}
           ports:
-          - containerPort: 8296
+          - containerPort: 8196
             protocol: TCP
           livenessProbe:
             failureThreshold: {{ .Values.app.livenessProbe.failureThreshold }}
             httpGet:
               path: /management/health
-              port: 8296
+              port: 8196
               scheme: HTTP
             initialDelaySeconds: {{ .Values.app.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.app.livenessProbe.periodSeconds }}
@@ -105,7 +110,7 @@ spec:
             failureThreshold: {{ .Values.app.readinessProbe.failureThreshold }}
             httpGet:
               path: /management/health
-              port: 8296
+              port: 8196
               scheme: HTTP
             initialDelaySeconds: {{ .Values.app.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.app.readinessProbe.periodSeconds }}
@@ -114,3 +119,13 @@ spec:
               name: restconf-driver
           resources:
 {{ toYaml .Values.app.resources | indent 12 }}
+{{- if .Values.app.certificateSecret }}
+          volumeMounts:
+            - mountPath: /var/lm/certs
+              name: certificates
+      volumes:
+      - name: certificates
+        secret:
+          defaultMode: 420
+          secretName: {{ .Values.app.certificateSecret }}
+{{- end }}
