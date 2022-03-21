@@ -89,7 +89,7 @@ public class JinJavaMessageConversionServiceImplTest {
         Map<String, ExecutionRequestPropertyValue> resourceProperties = new HashMap<>();
 
         resourceProperties.put("slicename", new GenericExecutionRequestPropertyValue("demo-slice2"));
-        resourceProperties.put("nsst",new GenericExecutionRequestPropertyValue("URLLC"));
+        resourceProperties.put("nsst",new GenericExecutionRequestPropertyValue("eMBB"));
 
         executionRequest.setResourceProperties(resourceProperties);
 
