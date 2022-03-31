@@ -29,7 +29,7 @@ public class CiscoCncServiceDriverTest {
     private static final String API_AUTH = "apiAuth";
     private static final String API_SLICES = "apiSlices";
     private static final String API_SLICE_FILTER_NAME = "apiSliceFilterName";
-    private static final String API_UPDATE_SUFFIX = "apiUpdateSuffix";
+    private static final String API_UPGRADE_SUFFIX = "apiUpGradeSuffix";
 
 
     private RestTemplate restTemplate= new RestTemplate();
@@ -128,7 +128,7 @@ public class CiscoCncServiceDriverTest {
 
 
     @Test
-    public void testUpdateSlice(){
+    public void testUpGradeSlice(){
         final MockRestServiceServer server = MockRestServiceServer.bindTo(restTemplate).build();
         ExecutionRequest executionRequest = new ExecutionRequest();
         ResourceManagerDeploymentLocation resourceManagerDeploymentLocation = new ResourceManagerDeploymentLocation();
@@ -136,7 +136,7 @@ public class CiscoCncServiceDriverTest {
         properties.put(API_CONTEXT, "/crosswork");
         properties.put(API_SLICES, "/proxy/nso/restconf/data/cisco-5g-transport-cfp:transport-slice");
         properties.put(API_SLICE_FILTER_NAME, "/dynamic");
-        properties.put(API_UPDATE_SUFFIX, "/nsst");
+        properties.put(API_UPGRADE_SUFFIX, "/nsst");
         properties.put(RC_SERVER_URL, "http://localhost:8080");
 
         resourceManagerDeploymentLocation.setProperties(properties);
@@ -158,13 +158,13 @@ public class CiscoCncServiceDriverTest {
                 .andExpect(header(HttpHeaders.CONTENT_TYPE, "application/yang-data+xml"))
                 //.andExpect(header(HttpHeaders.AUTHORIZATION, "Bearer jet"))
                 .andRespond(withCreatedEntity(URI.create(TEST_SERVER_BASE_URL +  "/crosswork/proxy/nso/restconf/data/cisco-5g-transport-cfp:transport-slice/dynamic=sliceName/nsst"))
-                        .body("updated")
+                        .body("upGraded")
                         .contentType(MediaType.APPLICATION_JSON));
 
         CiscoCncServiceDriver ciscoCncServiceDriver = new CiscoCncServiceDriver(restTemplate);
-        final String updatedSlice = ciscoCncServiceDriver.updateSlice(executionRequest,"jwt","sliceName","payload");
+        final String upGradeSlice = ciscoCncServiceDriver.upGradeSlice(executionRequest,"jwt","sliceName","payload");
 
-        assertThat(updatedSlice).isNotNull();
+        assertThat(upGradeSlice).isNotNull();
     }
 
 

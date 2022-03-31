@@ -58,10 +58,10 @@ public class LifecycleManagementService {
                 // Delay sending the asynchronous response (from a different thread) as this method needs to complete first (to send the response back to Brent)
                 externalMessagingService.sendDelayedExecutionAsyncResponse(new ExecutionAsyncResponse(requestId, ExecutionStatus.COMPLETE, null, Collections.emptyMap(), Collections.emptyMap()), rcDriverProperties.getExecutionResponseDelay());
                 return new ExecutionAcceptedResponse(requestId);
-            } else if ("Update".equalsIgnoreCase(executionRequest.getLifecycleName())) {
-                //Calling UPDATE API
-                final String updatePayload = messageConversionService.generateMessageFromRequest("Update", executionRequest);
-                this.ciscoCncServiceDriver.updateSlice(executionRequest, jwt, getSliceName(executionRequest.getProperties()), updatePayload);
+            } else if ("UpGrade".equalsIgnoreCase(executionRequest.getLifecycleName())) {
+                //Calling UPGRADE API
+                final String upGradePayload = messageConversionService.generateMessageFromRequest("UpGrade", executionRequest);
+                this.ciscoCncServiceDriver.upGradeSlice(executionRequest, jwt, getSliceName(executionRequest.getProperties()), upGradePayload);
                 // Delay sending the asynchronous response (from a different thread) as this method needs to complete first (to send the response back to Brent)
                 externalMessagingService.sendDelayedExecutionAsyncResponse(new ExecutionAsyncResponse(requestId, ExecutionStatus.COMPLETE, null, Collections.emptyMap(), Collections.emptyMap()), rcDriverProperties.getExecutionResponseDelay());
 
@@ -84,10 +84,10 @@ public class LifecycleManagementService {
 
     private String getSliceName(Map<String, Object> resourceProperties) throws MessageConversionException {
         String sliceName = (String)resourceProperties.get(SLICE_NAME);
-        logger.debug("sliceName for Update/Delete is {}", sliceName);
+        logger.debug("sliceName for UpGrade/Delete is {}", sliceName);
         if(StringUtils.isEmpty(sliceName)){
-            logger.error("sliceName cannot be empty for Update/Delete requests, make sure it is added in the resource properties");
-            throw new MessageConversionException("sliceName cannot be empty for Update/Delete requests, make sure it is added in the resource properties");
+            logger.error("sliceName cannot be empty for UpGrade/Delete requests, make sure it is added in the resource properties");
+            throw new MessageConversionException("sliceName cannot be empty for UpGrade/Delete requests, make sure it is added in the resource properties");
         }
         return sliceName;
     }

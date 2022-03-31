@@ -55,7 +55,7 @@ public class CiscoCncServiceDriver {
     private static final String API_AUTH = "apiAuth";
     private static final String API_SLICES = "apiSlices";
     private static final String API_SLICE_FILTER_NAME = "apiSliceFilterName";
-    private static final String API_UPDATE_SUFFIX = "apiUpdateSuffix";
+    private static final String API_UPGRADE_SUFFIX = "apiUpGradeSuffix";
 
     private static final String CONTENT_TYPE_YANG_XML = "application/yang-data+xml";
     private static final String CONTENT_TYPE_YANG_JSON = "application/yang-data+json";
@@ -223,29 +223,29 @@ public class CiscoCncServiceDriver {
     }
 
     /**
-     * Update slice
+     * UpGrade slice
      *\
      * <ul>
-     *     <li>Sends updateSlice message via HTTP POST to /cisco-5g-transport-cfp:transport-slice/dynamic=demo-slice2/nsst to update the slice</li>
-     *     <li>Gets 200 OK updated response record as the response body</li>
-     *     <li>Postcondition: Particular slice will be updated.</li>
+     *     <li>Sends upGradeSlice message via HTTP POST to /cisco-5g-transport-cfp:transport-slice/dynamic=demo-slice2/nsst to upGrade the slice</li>
+     *     <li>Gets 200 OK upGraded response record as the response body</li>
+     *     <li>Postcondition: Particular slice will be upGraded.</li>
      * </ul>
      *
      * @param executionRequest ExecutionRequest
      * @param jwt    JWT Token
      * @param payload Payload data
-     * @return response 200 successful update response.
+     * @return response 200 successful upGrade response.
      * @throws CiscoCncResponseException if there are any errors getting the slices
      */
-    public String updateSlice(final ExecutionRequest executionRequest, String jwt, String sliceName, String payload) throws CiscoCncResponseException{
+    public String upGradeSlice(final ExecutionRequest executionRequest, String jwt, String sliceName, String payload) throws CiscoCncResponseException{
         ResourceManagerDeploymentLocation deploymentLocation = executionRequest.getDeploymentLocation();
         Map<String, Object> deploymentLocationProperties = deploymentLocation.getProperties();
         String apiContext = (String)deploymentLocationProperties.get(API_CONTEXT);
         String apiSlices = (String)deploymentLocationProperties.get(API_SLICES);
         String apiSliceFilterName = (String)deploymentLocationProperties.get(API_SLICE_FILTER_NAME);
-        String apiUpdateSuffix = (String)deploymentLocationProperties.get(API_UPDATE_SUFFIX);
+        String apiUpGradeSuffix = (String)deploymentLocationProperties.get(API_UPGRADE_SUFFIX);
 
-        final String url = deploymentLocation.getProperties().get(RC_SERVER_URL) + apiContext + apiSlices + apiSliceFilterName + "=" + sliceName + apiUpdateSuffix;
+        final String url = deploymentLocation.getProperties().get(RC_SERVER_URL) + apiContext + apiSlices + apiSliceFilterName + "=" + sliceName + apiUpGradeSuffix;
 
         final HttpHeaders headers = getHttpHeaders(jwt);
         headers.setContentType(getContentType(executionRequest));
