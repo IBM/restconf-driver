@@ -58,8 +58,8 @@ public class LifecycleManagementService {
                 // Delay sending the asynchronous response (from a different thread) as this method needs to complete first (to send the response back to Brent)
                 externalMessagingService.sendDelayedExecutionAsyncResponse(new ExecutionAsyncResponse(requestId, ExecutionStatus.COMPLETE, null, Collections.emptyMap(), Collections.emptyMap()), rcDriverProperties.getExecutionResponseDelay());
                 return new ExecutionAcceptedResponse(requestId);
-            } else if ("Update".equalsIgnoreCase(executionRequest.getLifecycleName())) {
-                //Calling UPDATE API
+            } else if ("Upgrade".equalsIgnoreCase(executionRequest.getLifecycleName())) {
+                //Calling UPDATE API when Upgrade cp4na lifecycle method is called
                 final String updatePayload = messageConversionService.generateMessageFromRequest("Update", executionRequest);
                 this.ciscoCncServiceDriver.updateSlice(executionRequest, jwt, getSliceName(executionRequest.getProperties()), updatePayload);
                 // Delay sending the asynchronous response (from a different thread) as this method needs to complete first (to send the response back to Brent)
