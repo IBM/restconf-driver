@@ -13,4 +13,4 @@
 spring:
   kafka:
     bootstrap-servers:
-      - cp4na-o-events-kafka-bootstrap:9092
+      - iaf-system-kafka-bootstrap:9092
