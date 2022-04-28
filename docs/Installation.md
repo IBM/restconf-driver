@@ -9,7 +9,7 @@ Prior to installing the driver, it may be necessary to:
 Download the Helm chart for the required version of the RestConf Driver. Run the following command to install the Helm chart with the default values
 
 ```bash
-helm install restconf-driverr restconf-driver-.tgz
+helm install restconf-driverr restconf-driver<version>.tgz
 ```
 
 ## Onboarding Driver into LM
