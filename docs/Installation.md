@@ -11,6 +11,14 @@ Download the Helm chart for the required version of the RestConf Driver. Run the
 ```bash
 helm install restconf-driver restconf-driver-<version>.tgz
 ```
+**NOTES**:
+ Before installing the driver, add a secret for icr.io by editing secrets through the following OpenShift console:
+
+```bash
+https://console-openshift-console.apps.DEV-CLUSTER.cp.fyre.ibm.com/k8s/ns/openshift-config/secrets/pull-secret/edit
+```
+username: iamapikey
+password: < API key generated through IBM cloud account https://cloud.ibm.com/iam/apikeys >
 
 ## Onboarding Driver into LM
 
