@@ -11,10 +11,10 @@
 
 ## Maintainers
 
-- Hari Krishna [@hari.krishna1](https://github.com/hari.krishna1)
-- Lokanadham Nalla [@lokanadham.nalla1](https://github.com/lokanadham.nalla1)
+- Hari Krishna [@hari.krishna1](https://github.com/HariKrishna1-ibm)
+- Lokanadham Nalla [@lokanadham.nalla1](https://github.com/lokanalla)
 - Ranjeet Kumar [@rkumar8j](https://github.com/rkumar8j)
-- Prasad Settipalli [@Prasad.Settipalli](https://github.com/prasad.settipalli)
+- Prasad Settipalli [@Prasad.Settipalli](https://github.com/settipalli2F51)
 
 
 ## Reporting Issues
