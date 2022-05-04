@@ -24,7 +24,7 @@ global:
 ## Docker
 docker:
   ## Name of the Docker Image
-  image: icr.io/ibm/cp4na-drivers/restconf-driver
+  image: icr.io/cp4na-drivers/restconf-driver
   ## Tagged version of the Docker Image
   version: #project.version#
   ## Pull policy on the Docker Image (when global.docker.registryEnabled is false)
