@@ -11,7 +11,7 @@
     <!-- Must be duplicated for versions:set plugin to work in builds -->
     <groupId>com.ibm.restconf</groupId>
     <artifactId>restconf-driver</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>restconf</name>
@@ -28,7 +28,7 @@
         <commons-io.version>2.7</commons-io.version>
         <docker-maven-plugin.version>1.2.2</docker-maven-plugin.version>
         <docker.directory>docker-ready</docker.directory>
-        <docker.registry>ibmcom</docker.registry>
+        <docker.registry>icr.io/ibm/cp4na-drivers</docker.registry>
         <guava.version>30.0-jre</guava.version>
         <helm.chart.name>${project.artifactId}</helm.chart.name>
         <helm.download.url>https://get.helm.sh/${helm-client-executable}</helm.download.url>
