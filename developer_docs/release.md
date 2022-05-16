@@ -8,6 +8,7 @@ Ensure there is a milestone created for the release at: [https://github.com/IBM/
 
 Also ensure all issues going into this release are assigned to this milestone. **Move any issues from unreleased milestones into this release if the code has been merged**
 
+## 2. Merge Develop to Master
 ## 2. Update version (on develop)
 
 Ensure the version in `pom.xml` starts with the corresponding version for the release.
@@ -35,6 +36,38 @@ Then perform the release from the `master` branch. This ensures the `master` bra
 
 > Note: do NOT delete the `develop` branch
 
+## 3. Build and Release (on master)  
+ ## 5. Build and Release (on master)  
+
+ Access the `restconf-driver` build job on the internal CI/CD tool (maintainers should be aware and have access to this. Speak to another maintainer if not).
+
+ Navigate to the job for the `master` branch. The merge to `master` should have already triggered a build. Let this build complete in order to verify there were no issues with the merge. The automated job will not complete the release, it will only build and run the unit tests.
+
+ Once ready, click `Build with Parameters` on the `master` branch job. Enable the `release` option and click `BUILD`.
+
+ Wait for the build to complete successfully.
+
+ ## 6. Verify Release
+
+ Verify the CI/CD job has created a [release on Github](https://github.com/IBM/restconf-driver/releases).
+
+ Ensure the tag, title and changelog are all correct. Also ensure the helm chart `tgz` file has been attached.
+
+ Verify the release has been published to [icr](icr.io/ibm/cp4na-drivers).
+
+ ## 7. Cleanup
+
+ - Close the Milestone for this release on [Github](https://github.com/IBM/restconf-driver/milestones)
+ - Create a new Milestone for next release (if one does not exist).
+
+ # Manual Approach
+
+ **Please use the instructions above. The manual approach is now legacy and only kept for the rare circumstances**
+
+ ## 1-4. Prepare Release
+
+ Complete steps 1-4 from the main release instructions (found above).
+
 ## 5. Build and Release (on master)  
 
 > Note: Make sure to pull-in the latest and correct tag required for the openjdk image locally before preparing the release build.  
@@ -61,6 +94,7 @@ Verify that a helm chart is built in the `target/helm/repo` directory, e.g.
 ls target/helm/repo
 ```
 
+## 4. Release artifacts
 ## 6. Release artifacts
 
 The Docker image not been pushed by the previous build step so must be done manually, e.g.
@@ -79,7 +113,9 @@ Complete the following:
 - Add release notes in the description of the release. Look at previous releases to see the format. Usually, we will list the issues fixed.
 - Attach the Helm chart `tgz` file produced by `mvnw` command in the `target/helm/repo` directory
 
+## 5. Cleanup
 ## 7. Cleanup
 
 - Close the Milestone for this release on [Github](https://github.com/IBM/restconf-driver/milestones)
 - Create a new Milestone for next release (if one does not exist).
+Complete step 7 from the main release instructions (found above).
