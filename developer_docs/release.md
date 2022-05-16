@@ -66,7 +66,7 @@ ls target/helm/repo
 
 The Docker image not been pushed by the previous build step so must be done manually, e.g.
 ```
- echo <IAMAPIKEY> | docker login --username iamapikey --password-stdin icr.io/ibm/cp4na-drivers
+ echo <IAMAPIKEY> | docker login --username iamapikey --password-stdin icr.io/ibm/cp4na-drivers/
  docker push icr.io/ibm/cp4na-drivers
 
 ```
