@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
- String tarquinBranch = "issue/4217"
+ String tarquinBranch = "develop"
 
  library "tarquin@$tarquinBranch"
 
