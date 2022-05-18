@@ -35,6 +35,7 @@ Development work is normally carried out on the `develop` branch. Merge this bra
 Then perform the release from the `master` branch. This ensures the `master` branch is tagged correctly.
 
 > Note: do NOT delete the `develop` branch
+
 ## 5. Build and Release (on master)  
 
 Access the `restconf-driver` build job on the internal CI/CD tool (maintainers should be aware and have access to this. Speak to another maintainer if not).
@@ -76,6 +77,7 @@ Run the following command (the `dev` profile ensures extra log statements are av
 ```
 ./mvnw clean package -Pdev,docker,helm
 ```
+
 This should produce 2 artifacts:
 - a locally built docker image, e.g. `ibmcom/restconf-driver:0.0.1`
 - a helm chart, e.g. `restconf-driver-0.0.1.tgz`
