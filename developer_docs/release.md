@@ -1,6 +1,6 @@
 # Releasing the Driver
 
-The following guide details the steps for releasing the restconf-driver. This may only be performed by a user with admin rights to this Git repository and the ibmcom docker registry.
+The following guide details the steps for releasing the RestConf Lifecycle Driver. This may only be performed by a user with admin rights to this Git repository and the ibmcom docker registry.
 
 ## 1. Ensure Milestone
 
@@ -35,7 +35,6 @@ Development work is normally carried out on the `develop` branch. Merge this bra
 Then perform the release from the `master` branch. This ensures the `master` branch is tagged correctly.
 
 > Note: do NOT delete the `develop` branch
-
 ## 5. Build and Release (on master)  
 
 Access the `restconf-driver` build job on the internal CI/CD tool (maintainers should be aware and have access to this. Speak to another maintainer if not).
@@ -77,10 +76,9 @@ Run the following command (the `dev` profile ensures extra log statements are av
 ```
 ./mvnw clean package -Pdev,docker,helm
 ```
-
 This should produce 2 artifacts:
 - a locally built docker image, e.g. `ibmcom/restconf-driver:0.0.1`
-- a helm chart, e.g. `restconf-driver:0.0.1.tgz`
+- a helm chart, e.g. `restconf-driver-0.0.1.tgz`
 
 Verify the docker image has been produced by running
 ```
@@ -104,8 +102,8 @@ Complete the following:
 
 - Visit the [releases](https://github.com/IBM/restconf-driver/releases) section of the driver repository
 - Click `Draft a new release`
-- Input the version the `--version` option earlier as the tag e.g. 0.2.0
-- Use the same value for the `Release title` e.g. 0.2.0
+- Input the version the `--version` option earlier as the tag e.g. 0.0.1
+- Use the same value for the `Release title` e.g. 0.0.1
 - Add release notes in the description of the release. Look at previous releases to see the format. Usually, we will list the issues fixed.
 - Attach the Helm chart `tgz` file produced by `mvnw` command in the `target/helm/repo` directory
 
