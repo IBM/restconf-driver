@@ -30,6 +30,11 @@ The following command will onboard the RestConf Driver into CP4NA environment ca
 ```bash
 lmctl lifecycledriver add --type restconf --url http://restconf-driver:8196 dev01
 ```
+For TNC-O 1.3 or greater, use the following command:
+
+```bash
+lmctl resourcedriver add --type restconf --url http://restconf-driver:8196 dev01
+```
 
 **NOTES**:
 - The above example assumes lmctl has been configured with an environment called 'dev01'. Replace this environment name accordingly
