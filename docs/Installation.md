@@ -22,8 +22,7 @@ password: < API key generated through IBM cloud account https://cloud.ibm.com/ia
 
 ## Onboarding Driver into LM
 
-Onboarding Driver into LM
-Use lmctl for onboard the driver into LM. For full details on how to install or use lmctl, refer to its documentation.
+Use lmctl for  For full details on how to install or use lmctl, refer to its documentation.
 
 The following command will onboard the RestConf Driver into CP4NA environment called 'dev01':
 
