@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.0.4](https://github.com/IBM/restconf-driver/tree/0.0.4) (2022-07-20)
+
+- Security Vulnerabilities fixes
+
 ## [0.0.3](https://github.com/IBM/restconf-driver/tree/0.0.3) (2022-05-31)
 
 - Authentication Bypass fix for management API
