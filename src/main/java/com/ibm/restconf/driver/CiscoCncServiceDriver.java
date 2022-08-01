@@ -1,7 +1,10 @@
 package com.ibm.restconf.driver;
 
 import com.ibm.restconf.model.ExecutionRequest;
+import com.ibm.restconf.model.MessageDirection;
+import com.ibm.restconf.model.MessageType;
 import com.ibm.restconf.model.ResourceManagerDeploymentLocation;
+import com.ibm.restconf.utils.LoggingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +14,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.ibm.restconf.config.RCDriverConstants.RC_SERVER_URL;
 
@@ -216,8 +221,10 @@ public class CiscoCncServiceDriver {
         headers.setContentType(getContentType(executionRequest));
         headers.setAccept(Arrays.asList(MediaType.ALL));
         final HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
-
+        UUID uuid = UUID.randomUUID();
+        LoggingUtils.logEnabledMDC(payload, MessageType.REQUEST, MessageDirection.SENT, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",null,uuid.toString());
         final ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        LoggingUtils.logEnabledMDC(responseEntity.getBody(), MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),uuid.toString());
         checkResponseEntityMatches(responseEntity, HttpStatus.CREATED, true);
         return responseEntity.getBody();
     }
@@ -252,8 +259,10 @@ public class CiscoCncServiceDriver {
         headers.setAccept(Arrays.asList(MediaType.ALL));
         final HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
 
+        UUID uuid = UUID.randomUUID();
+        LoggingUtils.logEnabledMDC(payload, MessageType.REQUEST,MessageDirection.SENT, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",null,uuid.toString());
         final ResponseEntity<String> responseEntity =restTemplate.exchange(url, HttpMethod.PUT, requestEntity, String.class);
-
+        LoggingUtils.logEnabledMDC(responseEntity.getBody(),MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),uuid.toString());
         checkResponseEntityMatches(responseEntity, HttpStatus.OK, true);
         return responseEntity.getBody();
     }
@@ -286,7 +295,10 @@ public class CiscoCncServiceDriver {
         headers.setAccept(Arrays.asList(MediaType.ALL));
         final HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
 
+        UUID uuid = UUID.randomUUID();
+        LoggingUtils.logEnabledMDC(null, MessageType.REQUEST,MessageDirection.SENT, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",null,uuid.toString());
         final ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
+        LoggingUtils.logEnabledMDC(null, MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),uuid.toString());
         checkResponseEntityMatches(responseEntity, HttpStatus.NO_CONTENT, false);
         return responseEntity.getBody();
     }
@@ -346,6 +358,18 @@ public class CiscoCncServiceDriver {
         } else if (!containsResponseBody && responseEntity.getBody() != null) {
             throw new CiscoCncResponseException("No response body expected");
         }
+    }
+
+    Map<String,Object> getProtocolMetaData(String url,ResponseEntity responseEntity){
+
+        Map<String,Object> protocolMetadata=new HashMap<>();
+
+        protocolMetadata.put("status",responseEntity.getStatusCode());
+        protocolMetadata.put("status_code",responseEntity.getStatusCodeValue());
+        protocolMetadata.put("url",url);
+
+        return protocolMetadata;
+
     }
 
 }
