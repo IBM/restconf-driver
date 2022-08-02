@@ -6,6 +6,7 @@ import com.ibm.restconf.config.RCDriverProperties;
 import com.ibm.restconf.model.LcmOpOccPollingRequest;
 import com.ibm.restconf.model.alm.ExecutionAsyncResponse;
 import com.ibm.restconf.service.ExternalMessagingService;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,13 @@ public class KafkaExternalMessagingServiceImpl implements ExternalMessagingServi
         this.objectMapper = objectMapper;
     }
 
-    @Override public void sendExecutionAsyncResponse(ExecutionAsyncResponse request) {
+    @Override public void sendExecutionAsyncResponse(ExecutionAsyncResponse request, String tenantId) {
         try {
             final String message = objectMapper.writeValueAsString(request);
-            ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(properties.getTopics().getLifecycleResponsesTopic(), message);
+            logger.info("TenantId in Kafka==> "+ tenantId);
+            ProducerRecord<String, String> producerRecord = new ProducerRecord<>(properties.getTopics().getLifecycleResponsesTopic(), message);
+            producerRecord.headers().add("TenantId", tenantId.getBytes());
+            ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(producerRecord);
 
             future.addCallback(sendResult -> logger.debug("ExecutionAsyncResponse successfully sent"),
                     exception -> logger.warn("Exception sending ExecutionAsyncResponse", exception));
@@ -48,7 +52,7 @@ public class KafkaExternalMessagingServiceImpl implements ExternalMessagingServi
 
     @Override
     @Async
-    public void sendDelayedExecutionAsyncResponse(ExecutionAsyncResponse request, Duration delay) {
+    public void sendDelayedExecutionAsyncResponse(ExecutionAsyncResponse request, String tenantId, Duration delay) {
         if (delay != null) {
             try {
                 Thread.sleep(delay.toMillis());
@@ -56,7 +60,7 @@ public class KafkaExternalMessagingServiceImpl implements ExternalMessagingServi
                 logger.error("Thread interrupted during sleep", e);
             }
         }
-        sendExecutionAsyncResponse(request);
+        sendExecutionAsyncResponse(request, tenantId);
     }
 
     @Override public void sendLcmOpOccPollingRequest(LcmOpOccPollingRequest request) {
