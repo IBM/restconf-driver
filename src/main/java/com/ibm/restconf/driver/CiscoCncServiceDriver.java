@@ -211,7 +211,7 @@ public class CiscoCncServiceDriver {
      * @return 201 created response.
      * @throws CiscoCncResponseException if there are any errors getting the slices
      */
-    public String createSlice(final ExecutionRequest executionRequest, String jwt, String payload) throws CiscoCncResponseException{
+    public String createSlice(final ExecutionRequest executionRequest, String jwt, String payload, String driverrequestId) throws CiscoCncResponseException{
         Map<String, Object> deploymentLocationProperties = executionRequest.getDeploymentLocation().getProperties();
         String apiContext = (String)deploymentLocationProperties.get(API_CONTEXT);
         String apiSlices = (String)deploymentLocationProperties.get(API_SLICES);
@@ -222,9 +222,9 @@ public class CiscoCncServiceDriver {
         headers.setAccept(Arrays.asList(MediaType.ALL));
         final HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
         UUID uuid = UUID.randomUUID();
-        LoggingUtils.logEnabledMDC(payload, MessageType.REQUEST, MessageDirection.SENT, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",null,uuid.toString());
+        LoggingUtils.logEnabledMDC(payload, MessageType.REQUEST, MessageDirection.SENT, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",null,driverrequestId);
         final ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
-        LoggingUtils.logEnabledMDC(responseEntity.getBody(), MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),uuid.toString());
+        LoggingUtils.logEnabledMDC(responseEntity.getBody(), MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),driverrequestId);
         checkResponseEntityMatches(responseEntity, HttpStatus.CREATED, true);
         return responseEntity.getBody();
     }
@@ -244,7 +244,7 @@ public class CiscoCncServiceDriver {
      * @return response 200 successful update response.
      * @throws CiscoCncResponseException if there are any errors getting the slices
      */
-    public String updateSlice(final ExecutionRequest executionRequest, String jwt, String sliceName, String payload) throws CiscoCncResponseException{
+    public String updateSlice(final ExecutionRequest executionRequest, String jwt, String sliceName, String payload, String driverrequestId) throws CiscoCncResponseException{
         ResourceManagerDeploymentLocation deploymentLocation = executionRequest.getDeploymentLocation();
         Map<String, Object> deploymentLocationProperties = deploymentLocation.getProperties();
         String apiContext = (String)deploymentLocationProperties.get(API_CONTEXT);
@@ -260,9 +260,9 @@ public class CiscoCncServiceDriver {
         final HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
 
         UUID uuid = UUID.randomUUID();
-        LoggingUtils.logEnabledMDC(payload, MessageType.REQUEST,MessageDirection.SENT, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",null,uuid.toString());
+        LoggingUtils.logEnabledMDC(payload, MessageType.REQUEST,MessageDirection.SENT, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",null,driverrequestId);
         final ResponseEntity<String> responseEntity =restTemplate.exchange(url, HttpMethod.PUT, requestEntity, String.class);
-        LoggingUtils.logEnabledMDC(responseEntity.getBody(),MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),uuid.toString());
+        LoggingUtils.logEnabledMDC(responseEntity.getBody(),MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),driverrequestId);
         checkResponseEntityMatches(responseEntity, HttpStatus.OK, true);
         return responseEntity.getBody();
     }
@@ -282,7 +282,7 @@ public class CiscoCncServiceDriver {
      * @return response 204 No Content post successful deletion of particular slice.
      * @throws CiscoCncResponseException if there are any errors getting the slices
      */
-    public String deleteSlice(final ExecutionRequest executionRequest, String jwt, String sliceName,String payload) throws CiscoCncResponseException{
+    public String deleteSlice(final ExecutionRequest executionRequest, String jwt, String sliceName,String payload, String driverrequestId) throws CiscoCncResponseException{
         ResourceManagerDeploymentLocation deploymentLocation = executionRequest.getDeploymentLocation();
         Map<String, Object> deploymentLocationProperties = deploymentLocation.getProperties();
         String apiContext = (String)deploymentLocationProperties.get(API_CONTEXT);
@@ -296,9 +296,9 @@ public class CiscoCncServiceDriver {
         final HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
 
         UUID uuid = UUID.randomUUID();
-        LoggingUtils.logEnabledMDC(null, MessageType.REQUEST,MessageDirection.SENT, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",null,uuid.toString());
+        LoggingUtils.logEnabledMDC(null, MessageType.REQUEST,MessageDirection.SENT, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",null,driverrequestId);
         final ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
-        LoggingUtils.logEnabledMDC(null, MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),uuid.toString());
+        LoggingUtils.logEnabledMDC(null, MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),driverrequestId);
         checkResponseEntityMatches(responseEntity, HttpStatus.NO_CONTENT, false);
         return responseEntity.getBody();
     }
