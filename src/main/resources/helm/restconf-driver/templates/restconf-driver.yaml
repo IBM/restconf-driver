@@ -120,12 +120,23 @@ spec:
           resources:
 {{ toYaml .Values.app.resources | indent 12 }}
 {{- if .Values.app.certificateSecret }}
-          volumeMounts:
-            - mountPath: /var/lm/certs
-              name: certificates
+          - mountPath: /var/lm/certs
+            name: certificates
+{{- end }}
+          - name: {{ .Values.app.config.security.ssl.secret.name }}
+            mountPath: /var/restconfdriver/certs
+          - name: {{ .Values.global.security.certificates.keystore.secretName }}
+            mountPath: /var/lm/keystore
       volumes:
+{{- if .Values.app.certificateSecret }}
       - name: certificates
         secret:
           defaultMode: 420
           secretName: {{ .Values.app.certificateSecret }}
 {{- end }}
+      - name: {{ .Values.app.config.security.ssl.secret.name }}
+        secret:
+          secretName: {{ .Values.app.config.security.ssl.secret.name }}
+
+      - name: {{ .Values.global.security.certificates.keystore.secretName }}
+        emptyDir: {}
