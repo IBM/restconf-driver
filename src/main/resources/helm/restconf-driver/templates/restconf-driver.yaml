@@ -119,6 +119,7 @@ spec:
               name: restconf-driver
           resources:
 {{ toYaml .Values.app.resources | indent 12 }}
+          volumeMounts:
 {{- if .Values.app.certificateSecret }}
           - mountPath: /var/lm/certs
             name: certificates
@@ -137,6 +138,5 @@ spec:
       - name: {{ .Values.app.config.security.ssl.secret.name }}
         secret:
           secretName: {{ .Values.app.config.security.ssl.secret.name }}
-
       - name: {{ .Values.global.security.certificates.keystore.secretName }}
         emptyDir: {}
