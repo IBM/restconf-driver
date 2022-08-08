@@ -222,9 +222,9 @@ public class CiscoCncServiceDriver {
         headers.setAccept(Arrays.asList(MediaType.ALL));
         final HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
         UUID uuid = UUID.randomUUID();
-        LoggingUtils.logEnabledMDC(payload, MessageType.request, MessageDirection.sent, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getRequestProtocolMetaData(url) ,driverrequestId);
+        LoggingUtils.logEnabledMDC(payload, MessageType.REQUEST, MessageDirection.SENT, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getRequestProtocolMetaData(url) ,driverrequestId);
         final ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
-        LoggingUtils.logEnabledMDC(responseEntity.getBody(), MessageType.response,MessageDirection.received,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),driverrequestId);
+        LoggingUtils.logEnabledMDC(responseEntity.getBody(), MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),driverrequestId);
         checkResponseEntityMatches(responseEntity, HttpStatus.CREATED, true);
         return responseEntity.getBody();
     }
@@ -260,9 +260,9 @@ public class CiscoCncServiceDriver {
         final HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
 
         UUID uuid = UUID.randomUUID();
-        LoggingUtils.logEnabledMDC(payload, MessageType.request,MessageDirection.sent, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getRequestProtocolMetaData(url) ,driverrequestId);
+        LoggingUtils.logEnabledMDC(payload, MessageType.REQUEST,MessageDirection.SENT, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getRequestProtocolMetaData(url) ,driverrequestId);
         final ResponseEntity<String> responseEntity =restTemplate.exchange(url, HttpMethod.PUT, requestEntity, String.class);
-        LoggingUtils.logEnabledMDC(responseEntity.getBody(),MessageType.response,MessageDirection.received,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),driverrequestId);
+        LoggingUtils.logEnabledMDC(responseEntity.getBody(),MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),driverrequestId);
         checkResponseEntityMatches(responseEntity, HttpStatus.OK, true);
         return responseEntity.getBody();
     }
@@ -296,9 +296,9 @@ public class CiscoCncServiceDriver {
         final HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
 
         UUID uuid = UUID.randomUUID();
-        LoggingUtils.logEnabledMDC(null, MessageType.request,MessageDirection.sent, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getRequestProtocolMetaData(url) ,driverrequestId);
+        LoggingUtils.logEnabledMDC(null, MessageType.REQUEST,MessageDirection.SENT, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getRequestProtocolMetaData(url) ,driverrequestId);
         final ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
-        LoggingUtils.logEnabledMDC(null, MessageType.response,MessageDirection.received,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),driverrequestId);
+        LoggingUtils.logEnabledMDC(null, MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),driverrequestId);
         checkResponseEntityMatches(responseEntity, HttpStatus.NO_CONTENT, false);
         return responseEntity.getBody();
     }
