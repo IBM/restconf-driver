@@ -6,6 +6,7 @@ import com.ibm.restconf.security.AccessDeniedException;
 import com.ibm.restconf.service.LifecycleManagementService;
 import com.ibm.restconf.service.MessageConversionException;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController("LifecycleController")
@@ -42,6 +44,7 @@ public class LifecycleController {
         }*/
         logger.info("Received request to execute a lifecycle [{}] ", executionRequest.getLifecycleName());
         //executionRequest.setTenantId(tenantId);
+        tenantId = StringUtils.defaultIfEmpty(tenantId, "1");
         final ExecutionAcceptedResponse responseData = lifecycleManagementService.executeLifecycle(executionRequest, tenantId);
         return ResponseEntity.accepted().headers(prepareHttpHeadersWithTenantId(tenantId)).body(responseData);
     }
