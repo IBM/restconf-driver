@@ -47,16 +47,14 @@ public class LifecycleController {
         tenantId = StringUtils.defaultIfEmpty(tenantId, "1");
         final ExecutionAcceptedResponse responseData = lifecycleManagementService.executeLifecycle(executionRequest, tenantId);
         if(tenantId.equals("1")){
-            return ResponseEntity.accepted().headers(prepareHttpHeadersWithTenantId(tenantId)).body(responseData);
-        }else{
             return ResponseEntity.accepted().body(responseData);
+        }else{
+            return ResponseEntity.accepted().headers(prepareHttpHeadersWithTenantId(tenantId)).body(responseData);
         }
     }
     private HttpHeaders prepareHttpHeadersWithTenantId(String tenantId) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        if (tenantId != null) {
-            httpHeaders.add("TenantId", tenantId);
-        }
+        httpHeaders.add("TenantId", tenantId);
         logger.info("httpserver {} ", httpHeaders.toString());
         return httpHeaders;
     }

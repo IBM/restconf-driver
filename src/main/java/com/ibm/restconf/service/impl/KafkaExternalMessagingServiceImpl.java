@@ -39,19 +39,17 @@ public class KafkaExternalMessagingServiceImpl implements ExternalMessagingServi
         try {
             final String message = objectMapper.writeValueAsString(request);
             if(tenantId.equals("1")) {
+                ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(properties.getTopics().getLifecycleResponsesTopic(), message);
+                future.addCallback(sendResult -> logger.debug("ExecutionAsyncResponse successfully sent"),
+                        exception -> logger.warn("Exception sending ExecutionAsyncResponse", exception));
+            }else{
                 logger.info("TenantId in Kafka==> " + tenantId);
                 ProducerRecord<String, String> producerRecord = new ProducerRecord<>(properties.getTopics().getLifecycleResponsesTopic(), message);
                 producerRecord.headers().add("TenantId", tenantId.getBytes());
                 ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(producerRecord);
                 future.addCallback(sendResult -> logger.debug("ExecutionAsyncResponse successfully sent"),
                         exception -> logger.warn("Exception sending ExecutionAsyncResponse", exception));
-            }else{
-                ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(properties.getTopics().getLifecycleResponsesTopic(), message);
-
-                future.addCallback(sendResult -> logger.debug("ExecutionAsyncResponse successfully sent"),
-                        exception -> logger.warn("Exception sending ExecutionAsyncResponse", exception));
             }
-
         } catch (JsonProcessingException e) {
             logger.warn("Exception generating message text from ExecutionAsyncResponse", e);
         }
