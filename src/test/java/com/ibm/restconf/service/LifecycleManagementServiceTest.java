@@ -59,7 +59,7 @@ public class LifecycleManagementServiceTest {
         executionRequest.setDeploymentLocation(TEST_DL_NO_AUTH);
 
         when(mockAuthDriver.authenticate(executionRequest)).thenReturn("2312312312");
-        when(mockDriver.createSlice(any(), eq("2312312312"), any())).thenReturn("");
+        when(mockDriver.createSlice(any(), eq("2312312312"), any(), any())).thenReturn("");
 
         final ExecutionAcceptedResponse executionAcceptedResponse = lifecycleManagementService.executeLifecycle(executionRequest);
 

@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.ibm.restconf.config.RCDriverConstants.RC_SERVER_URL;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -121,7 +122,7 @@ public class CiscoCncServiceDriverTest {
                         .contentType(MediaType.APPLICATION_JSON));
 
         CiscoCncServiceDriver ciscoCncServiceDriver = new CiscoCncServiceDriver(restTemplate);
-        final String createdSlice = ciscoCncServiceDriver.createSlice(executionRequest,"jwt","payload");
+        final String createdSlice = ciscoCncServiceDriver.createSlice(executionRequest,"jwt","payload", UUID.randomUUID().toString());
 
         assertThat(createdSlice).isNotNull();
     }
@@ -162,7 +163,7 @@ public class CiscoCncServiceDriverTest {
                         .contentType(MediaType.APPLICATION_JSON));
 
         CiscoCncServiceDriver ciscoCncServiceDriver = new CiscoCncServiceDriver(restTemplate);
-        final String updatedSlice = ciscoCncServiceDriver.updateSlice(executionRequest,"jwt","sliceName","payload");
+        final String updatedSlice = ciscoCncServiceDriver.updateSlice(executionRequest,"jwt","sliceName","payload", UUID.randomUUID().toString());
 
         assertThat(updatedSlice).isNotNull();
     }
@@ -201,7 +202,7 @@ public class CiscoCncServiceDriverTest {
                 .andRespond(withStatus(HttpStatus.NO_CONTENT));
 
         CiscoCncServiceDriver ciscoCncServiceDriver = new CiscoCncServiceDriver(restTemplate);
-        final String deletedSlice = ciscoCncServiceDriver.deleteSlice(executionRequest,"jwt","sliceName","payload");
+        final String deletedSlice = ciscoCncServiceDriver.deleteSlice(executionRequest,"jwt","sliceName","payload", UUID.randomUUID().toString());
 
         assertThat(deletedSlice).isNull();
     }
