@@ -14,3 +14,12 @@ spring:
   jackson:
     serialization:
       indent_output: true
+
+server:
+  port: 8196
+  ssl:
+    key-store-type: PKCS12
+    key-store: /var/lm/keystore/keystore.p12
+    key-store-password: password
+    key-alias: restconf-driver
+    enabled: false
