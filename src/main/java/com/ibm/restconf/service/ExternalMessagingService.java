@@ -8,9 +8,9 @@ import java.time.Duration;
 
 public interface ExternalMessagingService {
 
-    void sendExecutionAsyncResponse(ExecutionAsyncResponse request);
+    void sendExecutionAsyncResponse(ExecutionAsyncResponse request, String tenantId);
 
-    void sendDelayedExecutionAsyncResponse(ExecutionAsyncResponse request, Duration delay);
+    void sendDelayedExecutionAsyncResponse(ExecutionAsyncResponse request, String tenantId, Duration delay);
 
     void sendLcmOpOccPollingRequest(LcmOpOccPollingRequest request);
 

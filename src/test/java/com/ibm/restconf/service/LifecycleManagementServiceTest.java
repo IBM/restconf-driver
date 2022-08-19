@@ -57,11 +57,12 @@ public class LifecycleManagementServiceTest {
         map.put("slicename", executionRequestPropertyValue);
         executionRequest.setResourceProperties(map);
         executionRequest.setDeploymentLocation(TEST_DL_NO_AUTH);
+        final String tenantId = "12345678";
 
         when(mockAuthDriver.authenticate(executionRequest)).thenReturn("2312312312");
         when(mockDriver.createSlice(any(), eq("2312312312"), any(), any())).thenReturn("");
 
-        final ExecutionAcceptedResponse executionAcceptedResponse = lifecycleManagementService.executeLifecycle(executionRequest);
+        final ExecutionAcceptedResponse executionAcceptedResponse = lifecycleManagementService.executeLifecycle(executionRequest, tenantId);
 
         assertThat(executionAcceptedResponse).isNotNull();
         assertThat(executionAcceptedResponse.getRequestId()).isNotNull();
@@ -74,11 +75,12 @@ public class LifecycleManagementServiceTest {
         final ExecutionRequest executionRequest = new ExecutionRequest();
         executionRequest.setLifecycleName("Integrity");
         executionRequest.setDeploymentLocation(TEST_DL_NO_AUTH);
+        final String tenantId = "12345678";
 
         when(mockAuthDriver.authenticate(executionRequest)).thenReturn("2312312312");
 
         assertThatThrownBy(() ->{
-            lifecycleManagementService.executeLifecycle(executionRequest);
+            lifecycleManagementService.executeLifecycle(executionRequest, tenantId);
         }).isInstanceOf(IllegalArgumentException.class).hasMessage("Requested transition [Integrity] is not supported by this lifecycle driver");
     }
 
@@ -89,10 +91,11 @@ public class LifecycleManagementServiceTest {
         final ExecutionRequest executionRequest = new ExecutionRequest();
         executionRequest.setLifecycleName("Integrity");
         executionRequest.setDeploymentLocation(TEST_DL_NO_AUTH);
+        final String tenantId = "12345678";
 
         when(mockAuthDriver.authenticate(executionRequest)).thenReturn(null);
         assertThatThrownBy(() ->{
-            lifecycleManagementService.executeLifecycle(executionRequest);
+            lifecycleManagementService.executeLifecycle(executionRequest, tenantId);
         }).isInstanceOf(AccessDeniedException.class).hasMessage("Invalid JWT Token. Unauthorized access");
     }
 
