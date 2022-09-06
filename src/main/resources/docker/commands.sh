@@ -16,5 +16,5 @@ CERTKEY=$CERTDIR/tls.key
 CERT=$CERTDIR/tls.crt
 
 cd ${alm_restconf_directory}
-openssl pkcs12 -export -inkey $CERTKEY -in $CERT -out $KEYSTORE -password pass:password -name "restconf-driver"
+! -f $KEYSTORE ] && openssl pkcs12 -export -inkey $CERTKEY -in $CERT -out $KEYSTORE -password pass:"${SERVER_SSL_KEY_STORE_PASSWORD}" -name "restconf-driver"
 java $JVM_OPTIONS -jar /data/restconf-driver-@project.version@.jar

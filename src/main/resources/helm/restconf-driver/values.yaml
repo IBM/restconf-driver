@@ -23,7 +23,7 @@ global:
     enabled: false
     certificates:
       keystore:
-        secretName: lm-keystore
+        secretName: cp4na-o-keystore
 ## Docker
 docker:
   ## Name of the Docker Image
