@@ -119,6 +119,12 @@ spec:
               name: restconf-driver
           resources:
 {{ toYaml .Values.app.resources | indent 12 }}
+          env:
+           - name: SERVER_SSL_KEY_STORE_PASSWORD
+             valueFrom:
+               secretKeyRef:
+                 name: {{ .Values.global.security.certificates.keystore.secretName }}
+                 key: keystorePassword
           volumeMounts:
 {{- if .Values.app.certificateSecret }}
           - mountPath: /var/lm/certs
