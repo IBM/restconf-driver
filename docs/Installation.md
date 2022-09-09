@@ -22,13 +22,17 @@ password: < API key generated through IBM cloud account https://cloud.ibm.com/ia
 
 ## Onboarding Driver into LM
 
-Onboarding Driver into LM
 Use lmctl for onboard the driver into LM. For full details on how to install or use lmctl, refer to its documentation.
+
+Certificate used by RestConf driver can be obtained from the secret restconf-driver-tls. This certificate needs to be used while onboarding RestConf driver. Use the following command to obtain RestConf certificate.
+```bash
+oc get secret restconf-driver-tls -o 'go-template={{index .data "tls.crt"}}' | base64 -d > restconf-driver-tls.pem
+```
 
 The following command will onboard the RestConf Driver into CP4NA environment called 'dev01':
 
 ```bash
-lmctl lifecycledriver add --type restconf --url http://restconf-driver:8196 dev01
+lmctl resourcedriver add --type restconf --url http://restconf-driver:8196 dev01  --certificate restconf-driver-tls.pem
 ```
 
 **NOTES**:

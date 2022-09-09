@@ -3,8 +3,8 @@ package com.ibm.restconf.driver;
 import com.ibm.restconf.model.ExecutionRequest;
 import com.ibm.restconf.model.ExecutionRequestPropertyValue;
 import com.ibm.restconf.model.ResourceManagerDeploymentLocation;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -15,12 +15,12 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.ibm.restconf.config.RCDriverConstants.RC_SERVER_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
-
 
 public class CiscoCncServiceDriverTest {
 
@@ -34,7 +34,7 @@ public class CiscoCncServiceDriverTest {
 
     private RestTemplate restTemplate= new RestTemplate();
     private MockRestServiceServer mockServer;
-    @Before
+    @BeforeEach
     public void init() {
         mockServer = MockRestServiceServer.createServer(restTemplate);
     }
@@ -121,7 +121,7 @@ public class CiscoCncServiceDriverTest {
                         .contentType(MediaType.APPLICATION_JSON));
 
         CiscoCncServiceDriver ciscoCncServiceDriver = new CiscoCncServiceDriver(restTemplate);
-        final String createdSlice = ciscoCncServiceDriver.createSlice(executionRequest,"jwt","payload");
+        final String createdSlice = ciscoCncServiceDriver.createSlice(executionRequest,"jwt","payload", UUID.randomUUID().toString());
 
         assertThat(createdSlice).isNotNull();
     }
@@ -162,7 +162,7 @@ public class CiscoCncServiceDriverTest {
                         .contentType(MediaType.APPLICATION_JSON));
 
         CiscoCncServiceDriver ciscoCncServiceDriver = new CiscoCncServiceDriver(restTemplate);
-        final String updatedSlice = ciscoCncServiceDriver.updateSlice(executionRequest,"jwt","sliceName","payload");
+        final String updatedSlice = ciscoCncServiceDriver.updateSlice(executionRequest,"jwt","sliceName","payload", UUID.randomUUID().toString());
 
         assertThat(updatedSlice).isNotNull();
     }
@@ -201,7 +201,7 @@ public class CiscoCncServiceDriverTest {
                 .andRespond(withStatus(HttpStatus.NO_CONTENT));
 
         CiscoCncServiceDriver ciscoCncServiceDriver = new CiscoCncServiceDriver(restTemplate);
-        final String deletedSlice = ciscoCncServiceDriver.deleteSlice(executionRequest,"jwt","sliceName","payload");
+        final String deletedSlice = ciscoCncServiceDriver.deleteSlice(executionRequest,"jwt","sliceName","payload", UUID.randomUUID().toString());
 
         assertThat(deletedSlice).isNull();
     }

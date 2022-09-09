@@ -40,7 +40,7 @@ public class LifecycleManagementService {
         this.rcDriverProperties = rcDriverProperties;
     }
 
-    public ExecutionAcceptedResponse executeLifecycle(ExecutionRequest executionRequest) throws MessageConversionException, AccessDeniedException {
+    public ExecutionAcceptedResponse executeLifecycle(ExecutionRequest executionRequest, String tenantId) throws MessageConversionException, AccessDeniedException {
         //Get JWT Token
         String jwt = this.authService.authenticate(executionRequest);
         final String requestId = UUID.randomUUID().toString();
@@ -53,25 +53,25 @@ public class LifecycleManagementService {
             if ("Create".equalsIgnoreCase(executionRequest.getLifecycleName())) {
                 //Calling CREATE API
                 final String createPayload = messageConversionService.generateMessageFromRequest("Create", executionRequest);
-                this.ciscoCncServiceDriver.createSlice(executionRequest, jwt, createPayload);
+                this.ciscoCncServiceDriver.createSlice(executionRequest, jwt, createPayload, requestId);
 
                 // Delay sending the asynchronous response (from a different thread) as this method needs to complete first (to send the response back to Brent)
-                externalMessagingService.sendDelayedExecutionAsyncResponse(new ExecutionAsyncResponse(requestId, ExecutionStatus.COMPLETE, null, Collections.emptyMap(), Collections.emptyMap()), rcDriverProperties.getExecutionResponseDelay());
+                externalMessagingService.sendDelayedExecutionAsyncResponse(new ExecutionAsyncResponse(requestId, ExecutionStatus.COMPLETE, null, Collections.emptyMap(), Collections.emptyMap()), tenantId, rcDriverProperties.getExecutionResponseDelay());
                 return new ExecutionAcceptedResponse(requestId);
             } else if ("Upgrade".equalsIgnoreCase(executionRequest.getLifecycleName())) {
                 //Calling UPDATE API when Upgrade cp4na lifecycle method is called
                 final String updatePayload = messageConversionService.generateMessageFromRequest("Update", executionRequest);
-                this.ciscoCncServiceDriver.updateSlice(executionRequest, jwt, getSliceName(executionRequest.getProperties()), updatePayload);
+                this.ciscoCncServiceDriver.updateSlice(executionRequest, jwt, getSliceName(executionRequest.getProperties()), updatePayload, requestId);
                 // Delay sending the asynchronous response (from a different thread) as this method needs to complete first (to send the response back to Brent)
-                externalMessagingService.sendDelayedExecutionAsyncResponse(new ExecutionAsyncResponse(requestId, ExecutionStatus.COMPLETE, null, Collections.emptyMap(), Collections.emptyMap()), rcDriverProperties.getExecutionResponseDelay());
+                externalMessagingService.sendDelayedExecutionAsyncResponse(new ExecutionAsyncResponse(requestId, ExecutionStatus.COMPLETE, null, Collections.emptyMap(), Collections.emptyMap()), tenantId, rcDriverProperties.getExecutionResponseDelay());
 
                 return new ExecutionAcceptedResponse(requestId);
             } else if ("Delete".equalsIgnoreCase(executionRequest.getLifecycleName())) {
                 //Calling DELETE API
                 final String deletePayload = messageConversionService.generateMessageFromRequest("Delete", executionRequest);
-                this.ciscoCncServiceDriver.deleteSlice(executionRequest, jwt, getSliceName(executionRequest.getProperties()), deletePayload);
+                this.ciscoCncServiceDriver.deleteSlice(executionRequest, jwt, getSliceName(executionRequest.getProperties()), deletePayload, requestId);
                 // Delay sending the asynchronous response (from a different thread) as this method needs to complete first (to send the response back to Brent)
-                externalMessagingService.sendDelayedExecutionAsyncResponse(new ExecutionAsyncResponse(requestId, ExecutionStatus.COMPLETE, null, Collections.emptyMap(), Collections.emptyMap()), rcDriverProperties.getExecutionResponseDelay());
+                externalMessagingService.sendDelayedExecutionAsyncResponse(new ExecutionAsyncResponse(requestId, ExecutionStatus.COMPLETE, null, Collections.emptyMap(), Collections.emptyMap()), tenantId, rcDriverProperties.getExecutionResponseDelay());
                 return new ExecutionAcceptedResponse(requestId);
             } else {
                 throw new IllegalArgumentException(String.format("Requested transition [%s] is not supported by this lifecycle driver", executionRequest.getLifecycleName()));

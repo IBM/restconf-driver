@@ -1,5 +1,14 @@
 # Change Log
 
+## [0.1.0](https://github.com/IBM/restconf-driver/tree/0.1.0) (2022-09-09)
+
+- Security Vulnerabilities fixes
+- Java11 Upgrade
+- Enable Request Response Logging
+- Enable SSL on restconf driver
+- Use Keystore password from the secret cp4na-o-keystore
+- Multitenancy feature
+
 ## [0.0.4](https://github.com/IBM/restconf-driver/tree/0.0.4) (2022-07-20)
 
 - Security Vulnerabilities fixes

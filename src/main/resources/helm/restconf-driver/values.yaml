@@ -21,6 +21,9 @@ global:
   ## Enable the use of LM security features
   security:
     enabled: false
+    certificates:
+      keystore:
+        secretName: cp4na-o-keystore
 ## Docker
 docker:
   ## Name of the Docker Image
@@ -47,6 +50,13 @@ app:
     ## Environment Options
     ## Add environment variables to the pods
     # env:
+    security:
+      ssl:
+        enabled: True
+        secret:
+          generate: True
+          name: restconf-driver-tls
+          commonName: restconf-driver
   ## secret containing client certificates that are to be trusted
   certificateSecret:
   ## Probe configuration for checking Application availability

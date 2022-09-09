@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.UUID;
@@ -38,9 +36,12 @@ public class LifecycleControllerTest {
         executionRequest.setLifecycleName("Create");
         executionRequest.setDeploymentLocation(TEST_DL_NO_AUTH);
         String payload = "{\"data\":\"no-data\"}";
-        when(lifecycleManagementService.executeLifecycle(any())).thenReturn(new ExecutionAcceptedResponse(UUID.randomUUID().toString()));
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("TenantId", "12345678");
+        HttpEntity request = new HttpEntity<>(executionRequest, httpHeaders);
+        when(lifecycleManagementService.executeLifecycle(any(),any())).thenReturn(new ExecutionAcceptedResponse(UUID.randomUUID().toString()));
 
-        final ResponseEntity<ExecutionAcceptedResponse> responseEntity = testRestTemplate.postForEntity("/api/driver/lifecycle/execute", executionRequest, ExecutionAcceptedResponse.class);
+        final ResponseEntity<ExecutionAcceptedResponse> responseEntity = testRestTemplate.postForEntity("/api/driver/lifecycle/execute", request, ExecutionAcceptedResponse.class);
         assertThat(responseEntity).isNotNull();
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
         assertThat(responseEntity.getHeaders().getContentType()).isNotNull();
