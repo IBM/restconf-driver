@@ -3,8 +3,8 @@ package com.ibm.restconf.driver;
 import com.ibm.restconf.model.ExecutionRequest;
 import com.ibm.restconf.model.ExecutionRequestPropertyValue;
 import com.ibm.restconf.model.ResourceManagerDeploymentLocation;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
 
-
 public class CiscoCncServiceDriverTest {
 
     public static final String TEST_SERVER_BASE_URL = "http://localhost:8080";
@@ -35,7 +34,7 @@ public class CiscoCncServiceDriverTest {
 
     private RestTemplate restTemplate= new RestTemplate();
     private MockRestServiceServer mockServer;
-    @Before
+    @BeforeEach
     public void init() {
         mockServer = MockRestServiceServer.createServer(restTemplate);
     }
