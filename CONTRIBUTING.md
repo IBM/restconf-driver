@@ -15,6 +15,7 @@
 - Lokanadham Nalla [@lokanadham.nalla1](https://github.com/lokanalla)
 - Ranjeet Kumar [@rkumar8j](https://github.com/rkumar8j)
 - Prasad Settipalli [@Prasad.Settipalli](https://github.com/settipalli2F51)
+- Haynes Davis [@haynesdavis](https://github.com/haynesdavis)
 
 
 ## Reporting Issues
