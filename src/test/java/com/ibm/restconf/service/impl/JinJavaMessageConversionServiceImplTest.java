@@ -6,7 +6,7 @@ import com.ibm.restconf.model.GenericExecutionRequestPropertyValue;
 import com.ibm.restconf.service.MessageConversionException;
 import com.ibm.restconf.service.MissingPropertyException;
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
