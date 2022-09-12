@@ -52,7 +52,6 @@
         <sortpom-maven-plugin.version>2.8.0</sortpom-maven-plugin.version>
         <spring-beans.version>5.3.21</spring-beans.version>
         <spring-core.version>5.3.21</spring-core.version>
-        <spring-security.version>5.3.8.RELEASE</spring-security.version>
         <springfox.version>3.0.0</springfox.version>
         <wiremock.version>2.2.8.RELEASE</wiremock.version>
     </properties>
