@@ -43,9 +43,9 @@ public class KafkaExternalMessagingServiceImpl implements ExternalMessagingServi
                 future.addCallback(sendResult -> logger.debug("ExecutionAsyncResponse successfully sent"),
                         exception -> logger.warn("Exception sending ExecutionAsyncResponse", exception));
             }else{
-                logger.info("TenantId in Kafka==> " + tenantId);
+                logger.info("tenantId in Kafka==> " + tenantId);
                 ProducerRecord<String, String> producerRecord = new ProducerRecord<>(properties.getTopics().getLifecycleResponsesTopic(), message);
-                producerRecord.headers().add("TenantId", tenantId.getBytes());
+                producerRecord.headers().add("tenantId", tenantId.getBytes());
                 ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(producerRecord);
                 future.addCallback(sendResult -> logger.debug("ExecutionAsyncResponse successfully sent"),
                         exception -> logger.warn("Exception sending ExecutionAsyncResponse", exception));
