@@ -35,7 +35,7 @@ public class LifecycleController {
 
     @PostMapping("/lifecycle/execute")
     @ApiOperation(value = "Execute a lifecycle against a RestConf", notes = "Initiates a lifecycle ")
-    public ResponseEntity<ExecutionAcceptedResponse> executeLifecycle(@RequestBody ExecutionRequest executionRequest, @RequestHeader(value = "TenantId", required = false) String tenantId, HttpServletRequest servletRequest) throws MessageConversionException, AccessDeniedException {
+    public ResponseEntity<ExecutionAcceptedResponse> executeLifecycle(@RequestBody ExecutionRequest executionRequest, @RequestHeader(value = "tenantId", required = false) String tenantId, HttpServletRequest servletRequest) throws MessageConversionException, AccessDeniedException {
         /*try (BufferedReader messageReader = servletRequest.getReader()) {
             String rawMessage = messageReader.lines().collect(Collectors.joining("\n"));
             logger.info("Received ExecutionRequest:\n{}", rawMessage);
@@ -54,7 +54,7 @@ public class LifecycleController {
     }
     private HttpHeaders prepareHttpHeadersWithTenantId(String tenantId) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("TenantId", tenantId);
+        httpHeaders.add("tenantId", tenantId);
         logger.info("httpserver {} ", httpHeaders.toString());
         return httpHeaders;
     }
