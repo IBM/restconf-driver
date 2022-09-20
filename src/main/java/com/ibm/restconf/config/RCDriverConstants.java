@@ -12,5 +12,6 @@ public abstract class RCDriverConstants {
     public static final String AUTHENTICATION_CLIENT_ID = "client_id";
     public static final String AUTHENTICATION_CLIENT_SECRET = "client_secret";
     public static final String AUTHENTICATION_ACCESS_TOKEN_URI = "accessTokenUri";
+    public static final String TENANTID = "tenantId";
 
 }
