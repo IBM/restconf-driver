@@ -19,6 +19,8 @@ import org.springframework.util.concurrent.ListenableFuture;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static com.ibm.restconf.config.RCDriverConstants.TENANTID;
+
 @Service
 public class KafkaExternalMessagingServiceImpl implements ExternalMessagingService {
 
@@ -45,7 +47,7 @@ public class KafkaExternalMessagingServiceImpl implements ExternalMessagingServi
             }else{
                 logger.info("tenantId in Kafka==> " + tenantId);
                 ProducerRecord<String, String> producerRecord = new ProducerRecord<>(properties.getTopics().getLifecycleResponsesTopic(), message);
-                producerRecord.headers().add("tenantId", tenantId.getBytes());
+                producerRecord.headers().add(TENANTID, tenantId.getBytes());
                 ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(producerRecord);
                 future.addCallback(sendResult -> logger.debug("ExecutionAsyncResponse successfully sent"),
                         exception -> logger.warn("Exception sending ExecutionAsyncResponse", exception));
