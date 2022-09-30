@@ -1,3 +1,5 @@
+# Change Log
+
 ## [0.1.2](https://github.com/IBM/restconf-driver/tree/0.1.2) (2022-09-30)
 
 [Full Changelog](https://github.com/IBM/restconf-driver/compare/0.1.1...0.1.2)
