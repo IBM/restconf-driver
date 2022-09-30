@@ -1,5 +1,10 @@
 # Change Log
 
+## [0.2.0](https://github.com/IBM/restconf-driver/tree/0.2.0) (2022-09-30)
+
+- Security Vulnerabilities fix
+- Multitenancy Feature
+
 ## [0.1.1](https://github.com/IBM/restconf-driver/tree/0.1.1) (2022-09-12)
 
 - Security Vulnerabilities fix
