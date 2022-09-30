@@ -37,7 +37,7 @@ public class LifecycleControllerTest {
         executionRequest.setDeploymentLocation(TEST_DL_NO_AUTH);
         String payload = "{\"data\":\"no-data\"}";
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("TenantId", "12345678");
+        httpHeaders.add("tenantId", "12345678");
         HttpEntity request = new HttpEntity<>(executionRequest, httpHeaders);
         when(lifecycleManagementService.executeLifecycle(any(),any())).thenReturn(new ExecutionAcceptedResponse(UUID.randomUUID().toString()));
 
