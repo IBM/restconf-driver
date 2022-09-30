@@ -1,9 +1,11 @@
-# Change Log
+## [0.1.2](https://github.com/IBM/restconf-driver/tree/0.1.2) (2022-09-30)
 
-## [0.2.0](https://github.com/IBM/restconf-driver/tree/0.2.0) (2022-09-30)
+[Full Changelog](https://github.com/IBM/sol005-lifecycle-driver/compare/0.1.1...0.1.2)
+
+**Implemented enhancements:**
 
 - Security Vulnerabilities fix
-- Multitenancy Feature
+- Maintain tenantId as constant and CamelCase
 
 ## [0.1.1](https://github.com/IBM/restconf-driver/tree/0.1.1) (2022-09-12)
 
