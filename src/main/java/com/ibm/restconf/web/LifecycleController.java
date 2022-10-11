@@ -44,13 +44,11 @@ public class LifecycleController {
             logger.warn(String.format("Exception caught logging ExecutionRequest message: %s", e.getMessage()), e);
         }*/
         logger.info("Received request to execute a lifecycle [{}] ", executionRequest.getLifecycleName());
-        //executionRequest.setTenantId(tenantId);
-        tenantId = StringUtils.defaultIfEmpty(tenantId, "1");
         final ExecutionAcceptedResponse responseData = lifecycleManagementService.executeLifecycle(executionRequest, tenantId);
-        if(tenantId.equals("1")){
-            return ResponseEntity.accepted().body(responseData);
-        }else{
+        if(tenantId != null){
             return ResponseEntity.accepted().headers(prepareHttpHeadersWithTenantId(tenantId)).body(responseData);
+        }else{
+            return ResponseEntity.accepted().body(responseData);
         }
     }
     private HttpHeaders prepareHttpHeadersWithTenantId(String tenantId) {
