@@ -1,5 +1,6 @@
 name: restconf-driver
 version: #project.version#
+appVersion: #project.version#
 apiVersion: v1
 description: A Helm chart for the restconf
 maintainers:
