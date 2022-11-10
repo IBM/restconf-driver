@@ -6,30 +6,29 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import static com.ibm.restconf.utils.Constants.KAFKA_MESSAGE_VERSION;
 
 
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY, content = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@ApiModel(description = "Details returned when an async lifecycle execution request is accepted")
+@Schema(description = "Details returned when an async lifecycle execution request is accepted")
 public class ExecutionAsyncResponse {
 
-    @ApiModelProperty(value = "Request ID")
+    @Schema(description = "Request ID")
     private String requestId;
-    @ApiModelProperty(value = "Status")
+    @Schema(description = "Status")
     private ExecutionStatus status;
-    @ApiModelProperty(value = "Failure Details")
+    @Schema(description = "Failure Details")
     private FailureDetails failureDetails;
-    @ApiModelProperty(value = "Outputs")
+    @Schema(description = "Outputs")
     private final Map<String, Object> outputs = new HashMap<>();
-    @ApiModelProperty(value = "Associated Resource Instance Topology")
+    @Schema(description = "Associated Resource Instance Topology")
     private final Map<String, InternalResourceInstance> associatedTopology = new HashMap<>();
-    @ApiModelProperty(value = "Timestamp")
+    @Schema(description = "Timestamp")
     private Long timestamp;
-    @ApiModelProperty(value = "version")
+    @Schema(description = "version")
     private String version = KAFKA_MESSAGE_VERSION;
 
     public ExecutionAsyncResponse() {}

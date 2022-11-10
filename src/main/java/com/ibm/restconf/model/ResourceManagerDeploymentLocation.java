@@ -3,22 +3,21 @@ package com.ibm.restconf.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * For use when interacting with resource manager API
  */
-@ApiModel
+@Schema
 public class ResourceManagerDeploymentLocation {
 
-    @ApiModelProperty(example = "brent", value = "Name of the resource manager")
+    @Schema(example = "brent", description = "Name of the resource manager")
     private String resourceManager;
-    @ApiModelProperty(position = 1, example = "dev-cloud", value = "Name of the deployment location")
+    @Schema(example = "dev-cloud", description = "Name of the deployment location")
     private String name;
-    @ApiModelProperty(position = 2, example = "default-rm::Cloud", value = "Type identifier for the deployment location")
+    @Schema(example = "default-rm::Cloud", description = "Type identifier for the deployment location")
     private String type;
-    @ApiModelProperty(position = 3, example = "", value = "Properties required to gain access to the deployment location VIM", required = true)
+    @Schema(example = "", description = "Properties required to gain access to the deployment location VIM", required = true)
     private Map<String, Object> properties = new HashMap<>();
 
     public ResourceManagerDeploymentLocation() {

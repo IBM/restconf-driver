@@ -5,7 +5,7 @@ import com.ibm.restconf.model.ExecutionRequest;
 import com.ibm.restconf.security.AccessDeniedException;
 import com.ibm.restconf.service.LifecycleManagementService;
 import com.ibm.restconf.service.MessageConversionException;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class LifecycleController {
     }
 
     @PostMapping("/lifecycle/execute")
-    @ApiOperation(value = "Execute a lifecycle against a RestConf", notes = "Initiates a lifecycle ")
+    @Operation(summary = "Execute a lifecycle against a RestConf", description = "Initiates a lifecycle ")
     public ResponseEntity<ExecutionAcceptedResponse> executeLifecycle(@RequestBody ExecutionRequest executionRequest, @RequestHeader(value = TENANTID, required = false) String tenantId, HttpServletRequest servletRequest) throws MessageConversionException, AccessDeniedException {
         /*try (BufferedReader messageReader = servletRequest.getReader()) {
             String rawMessage = messageReader.lines().collect(Collectors.joining("\n"));

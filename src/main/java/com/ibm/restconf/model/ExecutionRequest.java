@@ -8,28 +8,27 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import com.ibm.restconf.service.MessageConversionException;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY, content = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@ApiModel(description = "Request used to execute lifecycle")
+@Schema(description = "Request used to execute lifecycle")
 public class ExecutionRequest {
 
-    @ApiModelProperty(value = "Lifecycle Name")
+    @Schema(description = "Lifecycle Name")
     private String lifecycleName;
-    @ApiModelProperty(value = "Driver files")
+    @Schema(description = "Driver files")
     private String driverFiles;
-    @ApiModelProperty(value = "System Properties")
+    @Schema(description = "System Properties")
     private Map<String, ExecutionRequestPropertyValue> systemProperties = new HashMap<>();
-    @ApiModelProperty(value = "Resource Properties")
+    @Schema(description = "Resource Properties")
     private Map<String, ExecutionRequestPropertyValue> resourceProperties = new HashMap<>();
-    @ApiModelProperty(value = "Request Properties")
+    @Schema(description = "Request Properties")
     private Map<String, ExecutionRequestPropertyValue> requestProperties = new HashMap<>();
-    @ApiModelProperty(value = "Deployment Location")
+    @Schema(description = "Deployment Location")
     private ResourceManagerDeploymentLocation deploymentLocation;
-    @ApiModelProperty(value = "Associated Topology")
+    @Schema(description = "Associated Topology")
     private Map<String, InternalResourceInstance> associatedTopology = new HashMap<>();
 
     public ExecutionRequest() {}
