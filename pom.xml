@@ -39,7 +39,6 @@
         <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
         <java.version>11</java.version>
         <kiwigrid.version>4.13</kiwigrid.version>
-        <logstash-logback-encoder.version>5.1</logstash-logback-encoder.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -48,19 +47,20 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
         <scala.version>2.12</scala.version>
-        <snakeyaml.version>1.26</snakeyaml.version>
+        <snakeyaml.version>1.32</snakeyaml.version>
         <sortpom-maven-plugin.version>2.8.0</sortpom-maven-plugin.version>
-        <spring-beans.version>5.3.21</spring-beans.version>
-        <spring-core.version>5.3.21</spring-core.version>
-        <!--<springfox.version>3.0.0</springfox.version>-->
         <springdoc.version>1.6.12</springdoc.version>
-        <wiremock.version>3.0.5</wiremock.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.15.3</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -81,11 +81,7 @@
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
-        <dependency>
-            <groupId>net.logstash.logback</groupId>
-            <artifactId>logstash-logback-encoder</artifactId>
-            <version>${logstash-logback-encoder.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -152,7 +148,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.31</version>
+            <version>${snakeyaml.version}</version>
         </dependency>
     </dependencies>
 
