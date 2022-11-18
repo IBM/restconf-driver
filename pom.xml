@@ -40,7 +40,6 @@
         <java.version>11</java.version>
         <kiwigrid.version>4.13</kiwigrid.version>
         <logstash-logback-encoder.version>5.1</logstash-logback-encoder.version>
-        <logstash-logback-encoder.version>5.1</logstash-logback-encoder.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -81,11 +80,6 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.logstash.logback</groupId>
-            <artifactId>logstash-logback-encoder</artifactId>
-            <version>${logstash-logback-encoder.version}</version>
         </dependency>
         <dependency>
             <groupId>net.logstash.logback</groupId>
