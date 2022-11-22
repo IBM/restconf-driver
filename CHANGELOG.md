@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.1.3](https://github.com/IBM/restconf-driver/tree/0.1.3) (2022-11-22)
+
+[Full Changelog](https://github.com/IBM/restconf-driver/compare/0.1.2...0.1.3)
+
+**Implemented enhancements:**
+
+- Springboot Upgrade from 2.5.x to 2.7.x
+- Security vulnerability fixes
+- App version update in helm chart
+
 ## [0.1.2](https://github.com/IBM/restconf-driver/tree/0.1.2) (2022-09-30)
 
 [Full Changelog](https://github.com/IBM/restconf-driver/compare/0.1.1...0.1.2)
