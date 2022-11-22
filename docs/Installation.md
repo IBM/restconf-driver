@@ -32,7 +32,7 @@ oc get secret restconf-driver-tls -o 'go-template={{index .data "tls.crt"}}' | b
 The following command will onboard the RestConf Driver into CP4NA environment called 'dev01':
 
 ```bash
-lmctl resourcedriver add --type restconf --url http://restconf-driver:8196 dev01  --certificate restconf-driver-tls.pem
+lmctl resourcedriver add --type restconf --url https://restconf-driver:8196 dev01  --certificate restconf-driver-tls.pem
 ```
 
 **NOTES**:

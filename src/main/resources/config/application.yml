@@ -48,3 +48,6 @@ rcdriver:
     lcmOpOccPollingTopic: lcm_op_occ_polling_requests
     lifecycleResponsesTopic: lm_vnfc_lifecycle_execution_events
 
+springdoc:
+  pathsToMatch:
+    - /api/**
