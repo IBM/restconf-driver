@@ -75,7 +75,7 @@
     <logger name="liquibase" level="WARN"/>
     <logger name="sun.rmi.transport" level="WARN"/>
     <logger name="com.netflix.discovery.shared.resolver.aws.ConfigClusterResolver" level="WARN"/>
-
+    <logger name="jdk.event.security" level="WARN"/>
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
         <resetJUL>true</resetJUL>
     </contextListener>
