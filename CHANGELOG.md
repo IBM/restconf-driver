@@ -1,5 +1,14 @@
 # Change Log
 
+## [0.1.4](https://github.com/IBM/restconf-driver/tree/0.1.4) (2022-12-08)
+
+[Full Changelog](https://github.com/IBM/restconf-driver/compare/0.1.3...0.1.4)
+
+**Implemented enhancements:**
+
+- Disable spring security DEBUG logs by default
+- Security Vulnerability Fixes
+
 ## [0.1.3](https://github.com/IBM/restconf-driver/tree/0.1.3) (2022-11-22)
 
 [Full Changelog](https://github.com/IBM/restconf-driver/compare/0.1.2...0.1.3)
