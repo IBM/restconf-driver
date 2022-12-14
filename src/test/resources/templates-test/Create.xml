@@ -1,7 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <dynamic>
-    <nssi>demo-slice2</nssi>
+    <nssis>
+        <nssi>demo-slice1</nssi>
+    </nssis>
     <l3>
-        <auto-rt/>
+        <auto-rt />
         <as-number>64001</as-number>
         <endpoint>
             <pe>atlanta-regional-pe</pe>

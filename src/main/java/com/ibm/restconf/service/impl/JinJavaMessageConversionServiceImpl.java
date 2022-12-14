@@ -69,7 +69,8 @@ public class JinJavaMessageConversionServiceImpl implements MessageConversionSer
 
     private Map<String,Object> createJinJavaContext(Map<String, Object> resourceProperties, String templateContents) throws  IOException {
         Map<String, Object> context = new HashMap<>();
-        List<String> list = findPropertyListFromTemplate(templateContents);
+        //List<String> list = findPropertyListFromTemplate(templateContents);
+        Set<String> list = resourceProperties.keySet();
         logger.debug("list of properties in template {}", list);
         list.forEach(property -> {
             Object value = resourceProperties.get(property);
@@ -82,7 +83,7 @@ public class JinJavaMessageConversionServiceImpl implements MessageConversionSer
         return context;
     }
 
-    private List<String> findPropertyListFromTemplate(String templateContents) {
+   /* private List<String> findPropertyListFromTemplate(String templateContents) {
         List<String> list = new ArrayList<>();
         Pattern pattern = Pattern.compile("\\{\\{(.*?)}}");
         Matcher match = pattern.matcher(templateContents);
@@ -97,5 +98,5 @@ public class JinJavaMessageConversionServiceImpl implements MessageConversionSer
             logger.debug("No properties extracted from the template {}", templateContents);
         }
         return list;
-    }
+    }*/
 }

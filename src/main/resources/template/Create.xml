@@ -1,7 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <dynamic>
-    <nssi>{{sliceName}}</nssi>
+    <nssis>
+        {%- for sliceName in sliceNames %}
+        <nssi>{{sliceName}}</nssi>
+        {%- endfor %}
+    </nssis>
     <l3>
-        <auto-rt/>
+        <auto-rt />
         <as-number>{{asNumber}}</as-number>
         <endpoint>
             <pe>{{endpointPe}}</pe>
@@ -11,8 +16,8 @@
                 <pe-ip-addr>{{peIpAddress}}</pe-ip-addr>
                 <ce-pe-prot>
                     <e-bgp>
-                        <neighbor-ipv4>{{neighborIPv4}}</neighbor-ipv4>
-                        <remote-as-ipv4>{{remoteAsIPv4}}</remote-as-ipv4>
+                        <neighbor-ipv4>{{myMap["neighborIPv4"]}}</neighbor-ipv4>
+                        <remote-as-ipv4>{{myMap["remoteAsIPv4"]}}</remote-as-ipv4>
                     </e-bgp>
                 </ce-pe-prot>
             </interface>
