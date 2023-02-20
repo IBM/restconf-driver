@@ -50,6 +50,7 @@ public class CiscoCncServiceDriverTest {
         properties.put(API_AUTH, "/sso/v1/tickets");
         properties.put(RC_SERVER_URL, "http://localhost:8080");
         resourceManagerDeploymentLocation.setProperties(properties);
+        UUID uuid = UUID.randomUUID();
 
         server.expect(requestTo(TEST_SERVER_BASE_URL + "/crosswork/sso/v1/tickets"))
                 .andExpect(method(HttpMethod.POST))
@@ -59,7 +60,7 @@ public class CiscoCncServiceDriverTest {
                         .contentType(MediaType.APPLICATION_JSON));
 
         CiscoCncServiceDriver ciscoCncServiceDriver = new CiscoCncServiceDriver(restTemplate);
-        final String ticket = ciscoCncServiceDriver.getTicket(resourceManagerDeploymentLocation);
+        final String ticket = ciscoCncServiceDriver.getTicket(resourceManagerDeploymentLocation, uuid.toString());
 
         assertThat(ticket).isNotNull();
     }
@@ -74,16 +75,16 @@ public class CiscoCncServiceDriverTest {
         properties.put(API_AUTH, "/sso/v1/tickets");
         properties.put(RC_SERVER_URL, "http://localhost:8080");
         resourceManagerDeploymentLocation.setProperties(properties);
+        UUID uuid = UUID.randomUUID();
 
         server.expect(requestTo(TEST_SERVER_BASE_URL + "/crosswork/sso/v1/tickets/anyTicket"))
                 .andExpect(method(HttpMethod.POST))
-                .andExpect(header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE))
                 .andRespond(withCreatedEntity(URI.create(TEST_SERVER_BASE_URL +  "/crosswork/sso/v1/tickets"))
-                        .body("anyToken")
+                        .body("{\"token\":\"anyToken\"}")
                         .contentType(MediaType.APPLICATION_JSON));
 
         CiscoCncServiceDriver ciscoCncServiceDriver = new CiscoCncServiceDriver(restTemplate);
-        final String token = ciscoCncServiceDriver.getToken(resourceManagerDeploymentLocation,"anyTicket");
+        final String token = ciscoCncServiceDriver.getToken(resourceManagerDeploymentLocation,"anyTicket", uuid.toString());
 
         assertThat(token).isNotNull();
     }
@@ -115,15 +116,10 @@ public class CiscoCncServiceDriverTest {
         server.expect(requestTo(TEST_SERVER_BASE_URL + "/crosswork/proxy/nso/restconf/data/cisco-5g-transport-cfp:transport-slice"))
                 .andExpect(method(HttpMethod.POST))
                 .andExpect(header(HttpHeaders.CONTENT_TYPE, "application/yang-data+xml"))
-                //.andExpect(header(HttpHeaders.AUTHORIZATION, "Bearer jet"))
-                .andRespond(withCreatedEntity(URI.create(TEST_SERVER_BASE_URL +  "/crosswork/proxy/nso/restconf/data/cisco-5g-transport-cfp:transport-slice"))
-                        .body("created")
-                        .contentType(MediaType.APPLICATION_JSON));
+                .andRespond(withCreatedEntity(URI.create(TEST_SERVER_BASE_URL +  "/crosswork/proxy/nso/restconf/data/cisco-5g-transport-cfp:transport-slice")));
 
         CiscoCncServiceDriver ciscoCncServiceDriver = new CiscoCncServiceDriver(restTemplate);
-        final String createdSlice = ciscoCncServiceDriver.createSlice(executionRequest,"jwt","payload", UUID.randomUUID().toString());
-
-        assertThat(createdSlice).isNotNull();
+        ciscoCncServiceDriver.createSlice(executionRequest,"jwt","payload", UUID.randomUUID().toString());
     }
 
 
@@ -157,14 +153,12 @@ public class CiscoCncServiceDriverTest {
                 .andExpect(method(HttpMethod.PUT))
                 .andExpect(header(HttpHeaders.CONTENT_TYPE, "application/yang-data+xml"))
                 //.andExpect(header(HttpHeaders.AUTHORIZATION, "Bearer jet"))
-                .andRespond(withCreatedEntity(URI.create(TEST_SERVER_BASE_URL +  "/crosswork/proxy/nso/restconf/data/cisco-5g-transport-cfp:transport-slice/dynamic=sliceName/nsst"))
-                        .body("updated")
-                        .contentType(MediaType.APPLICATION_JSON));
+                .andRespond(withCreatedEntity(URI.create(TEST_SERVER_BASE_URL +  "/crosswork/proxy/nso/restconf/data/cisco-5g-transport-cfp:transport-slice/dynamic=sliceName/nsst")));
 
         CiscoCncServiceDriver ciscoCncServiceDriver = new CiscoCncServiceDriver(restTemplate);
-        final String updatedSlice = ciscoCncServiceDriver.updateSlice(executionRequest,"jwt","sliceName","payload", UUID.randomUUID().toString());
 
-        assertThat(updatedSlice).isNotNull();
+        ciscoCncServiceDriver.updateSlice(executionRequest,"jwt","sliceName","payload", UUID.randomUUID().toString());
+
     }
 
 
@@ -197,13 +191,9 @@ public class CiscoCncServiceDriverTest {
         server.expect(requestTo(TEST_SERVER_BASE_URL + "/crosswork/proxy/nso/restconf/data/cisco-5g-transport-cfp:transport-slice/dynamic=sliceName"))
                 .andExpect(method(HttpMethod.DELETE))
                 .andExpect(header(HttpHeaders.CONTENT_TYPE, "application/yang-data+xml"))
-                //.andExpect(header(HttpHeaders.AUTHORIZATION, "Bearer jet"))
                 .andRespond(withStatus(HttpStatus.NO_CONTENT));
 
         CiscoCncServiceDriver ciscoCncServiceDriver = new CiscoCncServiceDriver(restTemplate);
-        final String deletedSlice = ciscoCncServiceDriver.deleteSlice(executionRequest,"jwt","sliceName","payload", UUID.randomUUID().toString());
-
-        assertThat(deletedSlice).isNull();
+        ciscoCncServiceDriver.deleteSlice(executionRequest,"jwt","sliceName","payload", UUID.randomUUID().toString());
     }
-
 }

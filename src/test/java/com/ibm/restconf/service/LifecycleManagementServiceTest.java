@@ -15,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.ibm.restconf.test.TestConstants.TEST_DL_NO_AUTH;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,10 +59,7 @@ public class LifecycleManagementServiceTest {
         executionRequest.setResourceProperties(map);
         executionRequest.setDeploymentLocation(TEST_DL_NO_AUTH);
         final String tenantId = "12345678";
-
-        when(mockAuthDriver.authenticate(executionRequest)).thenReturn("2312312312");
-        when(mockDriver.createSlice(any(), eq("2312312312"), any(), any())).thenReturn("");
-
+        when(mockAuthDriver.authenticate(any(), anyString())).thenReturn("2312312312");
         final ExecutionAcceptedResponse executionAcceptedResponse = lifecycleManagementService.executeLifecycle(executionRequest, tenantId);
 
         assertThat(executionAcceptedResponse).isNotNull();
@@ -77,7 +75,7 @@ public class LifecycleManagementServiceTest {
         executionRequest.setDeploymentLocation(TEST_DL_NO_AUTH);
         final String tenantId = "12345678";
 
-        when(mockAuthDriver.authenticate(executionRequest)).thenReturn("2312312312");
+        when(mockAuthDriver.authenticate(any(), anyString())).thenReturn("2312312312");
 
         assertThatThrownBy(() ->{
             lifecycleManagementService.executeLifecycle(executionRequest, tenantId);
@@ -92,8 +90,8 @@ public class LifecycleManagementServiceTest {
         executionRequest.setLifecycleName("Integrity");
         executionRequest.setDeploymentLocation(TEST_DL_NO_AUTH);
         final String tenantId = "12345678";
-
-        when(mockAuthDriver.authenticate(executionRequest)).thenReturn(null);
+        UUID uuid= UUID.randomUUID();
+        when(mockAuthDriver.authenticate(executionRequest, uuid.toString())).thenReturn(null);
         assertThatThrownBy(() ->{
             lifecycleManagementService.executeLifecycle(executionRequest, tenantId);
         }).isInstanceOf(AccessDeniedException.class).hasMessage("Invalid JWT Token. Unauthorized access");

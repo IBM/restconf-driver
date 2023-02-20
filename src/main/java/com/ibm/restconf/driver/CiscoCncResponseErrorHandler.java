@@ -37,7 +37,7 @@ public abstract class CiscoCncResponseErrorHandler extends DefaultResponseErrorH
             // Else, attempt to extract information out of the error response (as best as possible)
             final String responseBody = e.getResponseBodyAsString();
             String detailsMessage = e.getStatusText();
-            if (!StringUtils.isEmpty(responseBody)) {
+            if (StringUtils.hasLength(responseBody)) {
                 detailsMessage += ": " + responseBody;
             }
             throw new CiscoCncResponseException(String.format("Caught REST client exception when communicating with %s", endpointDescription()));
