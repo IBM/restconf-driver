@@ -6,7 +6,6 @@ import com.ibm.restconf.security.AccessDeniedException;
 import com.ibm.restconf.service.LifecycleManagementService;
 import com.ibm.restconf.service.MessageConversionException;
 import io.swagger.v3.oas.annotations.Operation;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +42,10 @@ public class LifecycleController {
         } catch (IOException e) {
             logger.warn(String.format("Exception caught logging ExecutionRequest message: %s", e.getMessage()), e);
         }
-        tenantId = StringUtils.defaultIfEmpty(tenantId, "1");
         final ExecutionAcceptedResponse responseData = lifecycleManagementService.executeLifecycle(executionRequest, tenantId);
-        if(tenantId.equals("1")){
+        if (tenantId == null){
             return ResponseEntity.accepted().body(responseData);
-        }else{
+        } else {
             return ResponseEntity.accepted().headers(prepareHttpHeadersWithTenantId(tenantId)).body(responseData);
         }
     }
