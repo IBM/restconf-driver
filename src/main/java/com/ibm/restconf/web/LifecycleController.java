@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
 import static com.ibm.restconf.config.RCDriverConstants.TENANTID;
 
 @RestController("LifecycleController")
@@ -37,14 +37,12 @@ public class LifecycleController {
     @PostMapping("/lifecycle/execute")
     @Operation(summary = "Execute a lifecycle against a RestConf", description = "Initiates a lifecycle ")
     public ResponseEntity<ExecutionAcceptedResponse> executeLifecycle(@RequestBody ExecutionRequest executionRequest, @RequestHeader(value = TENANTID, required = false) String tenantId, HttpServletRequest servletRequest) throws MessageConversionException, AccessDeniedException {
-        /*try (BufferedReader messageReader = servletRequest.getReader()) {
+        try (BufferedReader messageReader = servletRequest.getReader()) {
             String rawMessage = messageReader.lines().collect(Collectors.joining("\n"));
             logger.info("Received ExecutionRequest:\n{}", rawMessage);
         } catch (IOException e) {
             logger.warn(String.format("Exception caught logging ExecutionRequest message: %s", e.getMessage()), e);
-        }*/
-        logger.info("Received request to execute a lifecycle [{}] ", executionRequest.getLifecycleName());
-        //executionRequest.setTenantId(tenantId);
+        }
         tenantId = StringUtils.defaultIfEmpty(tenantId, "1");
         final ExecutionAcceptedResponse responseData = lifecycleManagementService.executeLifecycle(executionRequest, tenantId);
         if(tenantId.equals("1")){
@@ -56,7 +54,7 @@ public class LifecycleController {
     private HttpHeaders prepareHttpHeadersWithTenantId(String tenantId) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(TENANTID, tenantId);
-        logger.info("httpserver {} ", httpHeaders.toString());
+        logger.info("http headers {} ", httpHeaders);
         return httpHeaders;
     }
 }

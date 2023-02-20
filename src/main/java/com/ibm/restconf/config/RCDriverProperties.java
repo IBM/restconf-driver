@@ -20,8 +20,8 @@ public class RCDriverProperties {
     private final Logging logging = new Logging();
     private Duration executionResponseDelay = Duration.ofSeconds(5);
     private Duration lcmOpOccPollingDelay = Duration.ofSeconds(10);
-    private Duration restConnectTimeout = Duration.ofSeconds(10);
-    private Duration restReadTimeout = Duration.ofSeconds(60);
+    private final Duration restConnectTimeout = Duration.ofSeconds(10);
+    private final Duration restReadTimeout = Duration.ofSeconds(60);
 
     public Async getAsync() {
         return async;
