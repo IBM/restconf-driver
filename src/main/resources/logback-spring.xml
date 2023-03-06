@@ -41,7 +41,12 @@
             </encoder>
         </springProfile>
         <springProfile name="!flatlog">
-            <encoder class="net.logstash.logback.encoder.LogstashEncoder"></encoder>
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+	        <jsonGeneratorDecorator class="net.logstash.logback.mask.MaskingJsonGeneratorDecorator">
+                    <defaultMask>XXXX</defaultMask>
+                    <valueMasker class="com.ibm.restconf.common.security.PasswordMasker" />
+                </jsonGeneratorDecorator>
+            </encoder>
         </springProfile>
     </appender>
 
