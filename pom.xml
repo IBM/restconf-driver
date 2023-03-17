@@ -11,7 +11,7 @@
     <!-- Must be duplicated for versions:set plugin to work in builds -->
     <groupId>com.ibm.restconf</groupId>
     <artifactId>restconf-driver</artifactId>
-    <version>0.1.5-java17</version>
+    <version>0.1.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>restconf</name>
@@ -38,13 +38,13 @@
         <helm.repo.url>${helm.repo.addr}/accanto/stable</helm.repo.url>
         <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
         <java.version>17</java.version>
-	<nashorn-core.version>15.4</nashorn-core.version>
         <kiwigrid.version>4.13</kiwigrid.version>
         <logstash-logback-encoder.version>7.2</logstash-logback-encoder.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+        <nashorn-core.version>15.4</nashorn-core.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
@@ -83,15 +83,15 @@
             <artifactId>logstash-logback-encoder</artifactId>
             <version>${logstash-logback-encoder.version}</version>
         </dependency>
-	<dependency>
-             <groupId>org.openjdk.nashorn</groupId>
-             <artifactId>nashorn-core</artifactId>
-             <version>${nashorn-core.version}</version>
-         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>1.15.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.nashorn</groupId>
+            <artifactId>nashorn-core</artifactId>
+            <version>${nashorn-core.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -151,16 +151,16 @@
             <artifactId>spring-kafka-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
             <version>5.7.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.yaml</groupId>
