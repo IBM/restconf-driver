@@ -11,7 +11,7 @@
     <!-- Must be duplicated for versions:set plugin to work in builds -->
     <groupId>com.ibm.restconf</groupId>
     <artifactId>restconf-driver</artifactId>
-    <version>0.1.5-SNAPSHOT</version>
+    <version>0.1.5-java17</version>
     <packaging>jar</packaging>
 
     <name>restconf</name>
@@ -36,8 +36,9 @@
         <helm.repo.api.url>${helm.repo.addr}/api/accanto</helm.repo.api.url>
         <helm.repo.snapshots.url>${helm.repo.addr}/accanto/snapshots</helm.repo.snapshots.url>
         <helm.repo.url>${helm.repo.addr}/accanto/stable</helm.repo.url>
-        <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
-        <java.version>11</java.version>
+        <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
+        <java.version>17</java.version>
+	<nashorn-core.version>15.4</nashorn-core.versio
         <kiwigrid.version>4.13</kiwigrid.version>
         <logstash-logback-encoder.version>7.2</logstash-logback-encoder.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
@@ -82,6 +83,11 @@
             <artifactId>logstash-logback-encoder</artifactId>
             <version>${logstash-logback-encoder.version}</version>
         </dependency>
+	<dependency>
+             <groupId>org.openjdk.nashorn</groupId>
+             <artifactId>nashorn-core</artifactId>
+             <version>${nashorn-core.version}</version>
+         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
