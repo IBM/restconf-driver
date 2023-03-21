@@ -10,6 +10,7 @@
 - Update to Java 17 for Restconf-driver
 - Mask password in the log message of ExecutionRequest
 - Released images should use prod profile instead of dev profile
+- Fix issues with list & map resource types for RestConf driver
 - Security Vulnerability Fixes
 
 ## [0.1.4](https://github.com/IBM/restconf-driver/tree/0.1.4) (2022-12-08)
