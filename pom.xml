@@ -25,7 +25,8 @@
 
     <properties>
         <argLine>-Djava.security.egd=file:/dev/./urandom</argLine>
-        <commons-io.version>2.7</commons-io.version>
+        <commons-io.version>2.11.0</commons-io.version>
+        <commons-net.version>3.9.0</commons-net.version>
         <docker-maven-plugin.version>1.2.2</docker-maven-plugin.version>
         <docker.directory>docker-ready</docker.directory>
         <docker.registry>icr.io/cp4na-drivers</docker.registry>
@@ -73,6 +74,11 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>${commons-net.version}</version>
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>
