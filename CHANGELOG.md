@@ -1,5 +1,18 @@
 # Change Log
 
+## [0.2.0](https://github.com/IBM/restconf-driver/tree/0.2.0) (2023-03-21)
+
+[Full Changelog](https://github.com/IBM/restconf-driver/compare/0.1.4...0.2.0)
+
+**Implemented enhancements:**
+
+- Logging issues in RestConf driver
+- Update to Java 17 for Restconf-driver
+- Mask password in the log message of ExecutionRequest
+- Released images should use prod profile instead of dev profile
+- Fix issues with list & map resource types for RestConf driver
+- Security Vulnerability Fixes
+
 ## [0.1.4](https://github.com/IBM/restconf-driver/tree/0.1.4) (2022-12-08)
 
 [Full Changelog](https://github.com/IBM/restconf-driver/compare/0.1.3...0.1.4)

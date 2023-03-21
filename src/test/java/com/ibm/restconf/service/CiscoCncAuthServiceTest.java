@@ -13,6 +13,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static com.ibm.restconf.test.TestConstants.TEST_DL_NO_AUTH;
@@ -37,10 +40,10 @@ public class CiscoCncAuthServiceTest {
         executionRequest.getResourceProperties().put("property1", new GenericExecutionRequestPropertyValue("value1"));
         executionRequest.getResourceProperties().put("property2", new GenericExecutionRequestPropertyValue("value2"));
         executionRequest.getResourceProperties().put("property3", new GenericExecutionRequestPropertyValue("value3"));
-
-        Mockito.when(ciscoCncAuthServiceDriver.getToken(Mockito.any(),Mockito.anyString())).thenReturn("s,md;lndclcsacsd");
-        Mockito.when(ciscoCncAuthServiceDriver.getTicket(Mockito.any())).thenReturn("s,md;lndclcsacsd");
-        String auth=ciscoCncAuthService.authenticate(executionRequest);
+        UUID uuid = UUID.randomUUID();
+        Mockito.when(ciscoCncAuthServiceDriver.getToken(Mockito.any(),Mockito.anyString(),Mockito.anyString() )).thenReturn("s,md;lndclcsacsd");
+        Mockito.when(ciscoCncAuthServiceDriver.getTicket(Mockito.any(), Mockito.anyString())).thenReturn("s,md;lndclcsacsd");
+        String auth=ciscoCncAuthService.authenticate(executionRequest, uuid.toString());
         assertThat(auth).isNotNull();
     }
 }

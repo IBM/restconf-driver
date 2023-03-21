@@ -73,9 +73,10 @@ Complete steps 1-4 from the main release instructions (found above).
 > e.g  
 > You can find the openjdk image details here: https://github.com/IBM/restconf-driver/blob/master/src/main/resources/docker/Dockerfile#L1-L2  
 > `docker pull openjdk:8u302-jre`
-Run the following command (the `dev` profile ensures extra log statements are available in the built code):
+
+Run the following command (the `prod` profile ensures INFO log statements are available in the built code):
 ```
-./mvnw clean package -Pdev,docker,helm
+./mvnw clean package -Pprod,docker,helm
 ```
 
 This should produce 2 artifacts:

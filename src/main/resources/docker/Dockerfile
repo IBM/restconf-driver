@@ -1,5 +1,5 @@
 ARG JDK_IMAGE=icr.io/appcafe/ibm-semeru-runtimes
-ARG JDK_VERSION=certified-11-jre-ubi
+ARG JDK_VERSION=certified-17-jre-ubi
 FROM ${JDK_IMAGE}:${JDK_VERSION}
 ENV JVM_OPTIONS=-Xmx256m
 COPY *.sh /data/

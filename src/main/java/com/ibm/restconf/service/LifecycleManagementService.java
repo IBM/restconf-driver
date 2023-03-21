@@ -42,14 +42,10 @@ public class LifecycleManagementService {
 
     public ExecutionAcceptedResponse executeLifecycle(ExecutionRequest executionRequest, String tenantId) throws MessageConversionException, AccessDeniedException {
         //Get JWT Token
-        String jwt = this.authService.authenticate(executionRequest);
         final String requestId = UUID.randomUUID().toString();
+        String jwt = this.authService.authenticate(executionRequest, requestId);
         logger.info("Processing execution request");
         if(jwt != null) {
-           /* if ("Get".equalsIgnoreCase(executionRequest.getLifecycleName())) {
-                //Calling GET API
-                return new ExecutionAcceptedResponse(requestId, this.ciscoCncServiceDriver.getSlices(executionRequest.getDeploymentLocation(), jwt, getSliceName(executionRequest), getConfigFlag(executionRequest)));
-            } else */
             if ("Create".equalsIgnoreCase(executionRequest.getLifecycleName())) {
                 //Calling CREATE API
                 final String createPayload = messageConversionService.generateMessageFromRequest("Create", executionRequest);
@@ -85,7 +81,7 @@ public class LifecycleManagementService {
     private String getSliceName(Map<String, Object> resourceProperties) throws MessageConversionException {
         String sliceName = (String)resourceProperties.get(SLICE_NAME);
         logger.debug("sliceName for Update/Delete is {}", sliceName);
-        if(StringUtils.isEmpty(sliceName)){
+        if(!StringUtils.hasLength(sliceName)){
             logger.error("sliceName cannot be empty for Update/Delete requests, make sure it is added in the resource properties");
             throw new MessageConversionException("sliceName cannot be empty for Update/Delete requests, make sure it is added in the resource properties");
         }

@@ -1,10 +1,8 @@
 package com.ibm.restconf.driver;
 
-import com.ibm.restconf.model.ExecutionRequest;
-import com.ibm.restconf.model.MessageDirection;
-import com.ibm.restconf.model.MessageType;
-import com.ibm.restconf.model.ResourceManagerDeploymentLocation;
+import com.ibm.restconf.model.*;
 import com.ibm.restconf.utils.LoggingUtils;
+import com.ibm.restconf.utils.RequestResponseLogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -87,7 +84,7 @@ public class CiscoCncServiceDriver {
      * @return newly created ticket
      * @throws CiscoCncResponseException if there are any errors getting the ticket
      */
-    public String getTicket(final ResourceManagerDeploymentLocation deploymentLocation) throws CiscoCncResponseException{
+    public String getTicket(final ResourceManagerDeploymentLocation deploymentLocation, String driverRequestId) throws CiscoCncResponseException{
         Map<String, Object> deploymentLocationProperties = deploymentLocation.getProperties();
         String apiContext = (String)deploymentLocationProperties.get(API_CONTEXT);
         String apiAuth = (String)deploymentLocationProperties.get(API_AUTH);
@@ -98,18 +95,24 @@ public class CiscoCncServiceDriver {
 
         final HttpHeaders headers = getHttpHeaders( null);
         headers.setContentType(MediaType.parseMediaType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
-        headers.setAccept(Arrays.asList(MediaType.parseMediaType(MediaType.TEXT_PLAIN_VALUE)));
-        StringBuilder builder = new StringBuilder();
-        builder.append("username=");
-        builder.append(username);
-        builder.append("&");
-        builder.append("password=");
-        builder.append(password);
-        String payload = builder.toString();
-
+        headers.setAccept(List.of(MediaType.parseMediaType(MediaType.TEXT_PLAIN_VALUE)));
+        String payload = createPayloadForTicket(username,password, false);
         final HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
+        UUID uuid = UUID.randomUUID();
+        LoggingUtils.logEnabledMDC(createPayloadForTicket(username,password, true), MessageType.REQUEST, MessageDirection.SENT, uuid.toString(),MediaType.APPLICATION_FORM_URLENCODED_VALUE, "http",
+                RequestResponseLogUtils.getRequestSentProtocolMetaData(url, "POST", headers), driverRequestId);
 
-        final ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        final ResponseEntity<String> responseEntity;
+        try {
+            responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        } catch (Throwable e){
+            // To log all unknown errors while making external call
+            LoggingUtils.logEnabledMDC(RequestResponseLogUtils.convertToJson(e.getMessage()), MessageType.RESPONSE, MessageDirection.RECEIVED, uuid.toString(), MediaType.APPLICATION_JSON_VALUE, "http",
+                    RequestResponseLogUtils.getResponseReceivedProtocolMetaData(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), null), driverRequestId);
+            throw e;
+        }
+        LoggingUtils.logEnabledMDC(responseEntity.getBody(), MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.TEXT_PLAIN_VALUE, "http",
+                RequestResponseLogUtils.getResponseReceivedProtocolMetaData(responseEntity.getStatusCodeValue(), responseEntity.getStatusCode().getReasonPhrase(), responseEntity.getHeaders()),driverRequestId);
         checkResponseEntityMatches(responseEntity, HttpStatus.CREATED, true);
         return responseEntity.getBody();
     }
@@ -129,20 +132,36 @@ public class CiscoCncServiceDriver {
      * @return newly created JWT token
      * @throws CiscoCncResponseException if there are any errors getting the ticket
      */
-    public String getToken(final ResourceManagerDeploymentLocation deploymentLocation, String ticket) throws CiscoCncResponseException{
+    public String getToken(final ResourceManagerDeploymentLocation deploymentLocation, String ticket, String driverRequestId) throws CiscoCncResponseException{
         Map<String, Object> deploymentLocationProperties = deploymentLocation.getProperties();
         String apiContext = (String)deploymentLocationProperties.get(API_CONTEXT);
         String apiAuth = (String)deploymentLocationProperties.get(API_AUTH);
         final String url = deploymentLocation.getProperties().get(RC_SERVER_URL) + apiContext + apiAuth + "/" + ticket;
 
         final HttpHeaders headers = getHttpHeaders( null);
-        headers.setContentType(MediaType.parseMediaType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         final HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-
-        final ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        UUID uuid = UUID.randomUUID();
+        LoggingUtils.logEnabledMDC(null, MessageType.REQUEST, MessageDirection.SENT, uuid.toString(),null, "http",
+                RequestResponseLogUtils.getRequestSentProtocolMetaData(url, "POST", headers), driverRequestId);
+        final ResponseEntity<JWTToken> responseEntity;
+        try {
+            responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, JWTToken.class);
+        } catch (Throwable e){
+            // To log all unknown errors while making external call
+            LoggingUtils.logEnabledMDC(RequestResponseLogUtils.convertToJson(e.getMessage()), MessageType.RESPONSE, MessageDirection.RECEIVED, uuid.toString(), MediaType.APPLICATION_JSON_VALUE, "http",
+                    RequestResponseLogUtils.getResponseReceivedProtocolMetaData(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), null), driverRequestId);
+            throw e;
+        }
+        JWTToken jwtToken = responseEntity.getBody();
+        LoggingUtils.logEnabledMDC(RequestResponseLogUtils.convertToJson(jwtToken), MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON_VALUE, "http",
+                RequestResponseLogUtils.getResponseReceivedProtocolMetaData(responseEntity.getStatusCodeValue(), responseEntity.getStatusCode().getReasonPhrase(), responseEntity.getHeaders()),driverRequestId);
         checkResponseEntityMatches(responseEntity, HttpStatus.CREATED, true);
-        return responseEntity.getBody();
+        if(jwtToken != null) {
+            return jwtToken.getToken();
+        }else{
+            return null;
+        }
     }
 
     /**
@@ -173,7 +192,7 @@ public class CiscoCncServiceDriver {
         String apiNonConfig = (String)deploymentLocationProperties.get("apiNonConfig");
         String apiConfig = (String)deploymentLocationProperties.get("apiConfig");
 
-        String url = null;
+        String url;
         if (sliceName==null) {
             // gets all slices
             url = deploymentLocation.getProperties().get(RC_SERVER_URL) + apiContext + apiSlices;
@@ -208,10 +227,9 @@ public class CiscoCncServiceDriver {
      * @param executionRequest ExecutionRquest
      * @param jwt    JWT Token
      * @param payload payload data
-     * @return 201 created response.
      * @throws CiscoCncResponseException if there are any errors getting the slices
      */
-    public String createSlice(final ExecutionRequest executionRequest, String jwt, String payload, String driverrequestId) throws CiscoCncResponseException{
+    public void createSlice(final ExecutionRequest executionRequest, String jwt, String payload, String driverRequestId) throws CiscoCncResponseException{
         Map<String, Object> deploymentLocationProperties = executionRequest.getDeploymentLocation().getProperties();
         String apiContext = (String)deploymentLocationProperties.get(API_CONTEXT);
         String apiSlices = (String)deploymentLocationProperties.get(API_SLICES);
@@ -219,14 +237,24 @@ public class CiscoCncServiceDriver {
         logger.debug("url = {}", url);
         final HttpHeaders headers = getHttpHeaders(jwt);
         headers.setContentType(getContentType(executionRequest));
-        headers.setAccept(Arrays.asList(MediaType.ALL));
+        headers.setAccept(List.of(MediaType.ALL));
         final HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
         UUID uuid = UUID.randomUUID();
-        LoggingUtils.logEnabledMDC(payload, MessageType.REQUEST, MessageDirection.SENT, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getRequestProtocolMetaData(url) ,driverrequestId);
-        final ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
-        LoggingUtils.logEnabledMDC(responseEntity.getBody(), MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),driverrequestId);
-        checkResponseEntityMatches(responseEntity, HttpStatus.CREATED, true);
-        return responseEntity.getBody();
+        LoggingUtils.logEnabledMDC(payload, MessageType.REQUEST, MessageDirection.SENT, uuid.toString(), CONTENT_TYPE_YANG_XML, "http",
+                RequestResponseLogUtils.getRequestSentProtocolMetaData(url, "POST", headers),driverRequestId);
+        final ResponseEntity<String> responseEntity;
+        try {
+            responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        } catch (Throwable e){
+            // To log all unknown errors while making external call
+            LoggingUtils.logEnabledMDC(RequestResponseLogUtils.convertToJson(e.getMessage()), MessageType.RESPONSE, MessageDirection.RECEIVED, uuid.toString(), MediaType.APPLICATION_JSON_VALUE, "http",
+                    RequestResponseLogUtils.getResponseReceivedProtocolMetaData(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), null), driverRequestId);
+            throw e;
+        }
+
+        LoggingUtils.logEnabledMDC(null, MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(), null, "http",
+                RequestResponseLogUtils.getResponseReceivedProtocolMetaData(responseEntity.getStatusCodeValue(), responseEntity.getStatusCode().getReasonPhrase(), responseEntity.getHeaders()),driverRequestId);
+        checkResponseEntityMatches(responseEntity, HttpStatus.CREATED, false);
     }
 
     /**
@@ -241,10 +269,9 @@ public class CiscoCncServiceDriver {
      * @param executionRequest ExecutionRequest
      * @param jwt    JWT Token
      * @param payload Payload data
-     * @return response 200 successful update response.
      * @throws CiscoCncResponseException if there are any errors getting the slices
      */
-    public String updateSlice(final ExecutionRequest executionRequest, String jwt, String sliceName, String payload, String driverrequestId) throws CiscoCncResponseException{
+    public void updateSlice(final ExecutionRequest executionRequest, String jwt, String sliceName, String payload, String driverRequestId) throws CiscoCncResponseException{
         ResourceManagerDeploymentLocation deploymentLocation = executionRequest.getDeploymentLocation();
         Map<String, Object> deploymentLocationProperties = deploymentLocation.getProperties();
         String apiContext = (String)deploymentLocationProperties.get(API_CONTEXT);
@@ -256,15 +283,24 @@ public class CiscoCncServiceDriver {
 
         final HttpHeaders headers = getHttpHeaders(jwt);
         headers.setContentType(getContentType(executionRequest));
-        headers.setAccept(Arrays.asList(MediaType.ALL));
+        headers.setAccept(List.of(MediaType.ALL));
         final HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
 
         UUID uuid = UUID.randomUUID();
-        LoggingUtils.logEnabledMDC(payload, MessageType.REQUEST,MessageDirection.SENT, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getRequestProtocolMetaData(url) ,driverrequestId);
-        final ResponseEntity<String> responseEntity =restTemplate.exchange(url, HttpMethod.PUT, requestEntity, String.class);
-        LoggingUtils.logEnabledMDC(responseEntity.getBody(),MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),driverrequestId);
-        checkResponseEntityMatches(responseEntity, HttpStatus.OK, true);
-        return responseEntity.getBody();
+        LoggingUtils.logEnabledMDC(payload, MessageType.REQUEST,MessageDirection.SENT, uuid.toString(), CONTENT_TYPE_YANG_XML, "http",
+                RequestResponseLogUtils.getRequestSentProtocolMetaData(url, "PUT", headers), driverRequestId);
+        final ResponseEntity<String> responseEntity;
+        try {
+            responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, String.class);
+        } catch (Throwable e){
+            // To log all unknown errors while making external call
+            LoggingUtils.logEnabledMDC(RequestResponseLogUtils.convertToJson(e.getMessage()), MessageType.RESPONSE, MessageDirection.RECEIVED, uuid.toString(), MediaType.APPLICATION_JSON_VALUE, "http",
+                    RequestResponseLogUtils.getResponseReceivedProtocolMetaData(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), null), driverRequestId);
+            throw e;
+        }
+        LoggingUtils.logEnabledMDC(null,MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(), null, "http",
+                RequestResponseLogUtils.getResponseReceivedProtocolMetaData(responseEntity.getStatusCodeValue(), responseEntity.getStatusCode().getReasonPhrase(), responseEntity.getHeaders()), driverRequestId);
+        checkResponseEntityMatches(responseEntity, HttpStatus.NO_CONTENT, false);
     }
 
     /**
@@ -279,10 +315,9 @@ public class CiscoCncServiceDriver {
      * @param executionRequest ExecutionRequest
      * @param jwt    JWT Token
      * @param sliceName Particular slice
-     * @return response 204 No Content post successful deletion of particular slice.
      * @throws CiscoCncResponseException if there are any errors getting the slices
      */
-    public String deleteSlice(final ExecutionRequest executionRequest, String jwt, String sliceName,String payload, String driverrequestId) throws CiscoCncResponseException{
+    public void deleteSlice(final ExecutionRequest executionRequest, String jwt, String sliceName,String payload, String driverRequestId) throws CiscoCncResponseException{
         ResourceManagerDeploymentLocation deploymentLocation = executionRequest.getDeploymentLocation();
         Map<String, Object> deploymentLocationProperties = deploymentLocation.getProperties();
         String apiContext = (String)deploymentLocationProperties.get(API_CONTEXT);
@@ -292,15 +327,25 @@ public class CiscoCncServiceDriver {
 
         final HttpHeaders headers = getHttpHeaders(jwt);
         headers.setContentType(getContentType(executionRequest));
-        headers.setAccept(Arrays.asList(MediaType.ALL));
+        headers.setAccept(List.of(MediaType.ALL));
         final HttpEntity<String> requestEntity = new HttpEntity<>(payload, headers);
 
         UUID uuid = UUID.randomUUID();
-        LoggingUtils.logEnabledMDC(null, MessageType.REQUEST,MessageDirection.SENT, uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getRequestProtocolMetaData(url) ,driverrequestId);
-        final ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
-        LoggingUtils.logEnabledMDC(null, MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON.toString(), "http",getProtocolMetaData(url,responseEntity),driverrequestId);
+        LoggingUtils.logEnabledMDC(null, MessageType.REQUEST,MessageDirection.SENT, uuid.toString(),null, "http",
+                RequestResponseLogUtils.getRequestSentProtocolMetaData(url, "DELETE", headers), driverRequestId);
+        final ResponseEntity<String> responseEntity;
+        try {
+            responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
+        } catch (Throwable e){
+            // To log all unknown errors while making external call
+            LoggingUtils.logEnabledMDC(RequestResponseLogUtils.convertToJson(e.getMessage()), MessageType.RESPONSE, MessageDirection.RECEIVED, uuid.toString(), MediaType.APPLICATION_JSON_VALUE, "http",
+                    RequestResponseLogUtils.getResponseReceivedProtocolMetaData(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), null), driverRequestId);
+            throw e;
+        }
+
+        LoggingUtils.logEnabledMDC(null, MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),null, "http",
+                RequestResponseLogUtils.getResponseReceivedProtocolMetaData(responseEntity.getStatusCodeValue(), responseEntity.getStatusCode().getReasonPhrase(), responseEntity.getHeaders()), driverRequestId);
         checkResponseEntityMatches(responseEntity, HttpStatus.NO_CONTENT, false);
-        return responseEntity.getBody();
     }
 
     /**
@@ -318,7 +363,7 @@ public class CiscoCncServiceDriver {
         String requestContentType = CONTENT_TYPE_YANG_XML;
         Map<String, Object> resoureceProperties = executionRequest.getProperties();
         String contentType = (String)resoureceProperties.get("ContentType");
-        if(!StringUtils.isEmpty(contentType) && contentType.equalsIgnoreCase("json")){
+        if(StringUtils.hasLength(contentType) && contentType.equalsIgnoreCase("json")){
             requestContentType = CONTENT_TYPE_YANG_JSON;
         }
         return MediaType.parseMediaType(requestContentType);
@@ -330,7 +375,6 @@ public class CiscoCncServiceDriver {
      */
     private HttpHeaders getHttpHeaders(String jwt) throws CiscoCncResponseException {
         final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
         if(jwt!=null) {
             headers.setBearerAuth(jwt);
         }
@@ -360,23 +404,17 @@ public class CiscoCncServiceDriver {
         }
     }
 
-    Map<String,Object> getProtocolMetaData(String url,ResponseEntity responseEntity){
-
-        Map<String,Object> protocolMetadata=new HashMap<>();
-
-        protocolMetadata.put("status",responseEntity.getStatusCode());
-        protocolMetadata.put("status_code",responseEntity.getStatusCodeValue());
-        protocolMetadata.put("url",url);
-
-        return protocolMetadata;
-
+    private String createPayloadForTicket(String userName, String password, boolean maskPassword){
+        StringBuilder builder = new StringBuilder();
+        builder.append("username=");
+        builder.append(userName);
+        builder.append("&");
+        builder.append("password=");
+        if(maskPassword){
+            builder.append("*******");
+        }else {
+            builder.append(password);
+        }
+        return builder.toString();
     }
-
-    Map<String,Object> getRequestProtocolMetaData(String url){
-
-        Map<String,Object> protocolMetadata=new HashMap<>();
-        protocolMetadata.put("url",url);
-        return protocolMetadata;
-    }
-
 }
