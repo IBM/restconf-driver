@@ -1,5 +1,14 @@
 # Change Log
 
+## [0.2.1](https://github.com/IBM/restconf-driver/tree/0.2.1) (2023-04-08)
+
+[Full Changelog](https://github.com/IBM/restconf-driver/compare/0.2.0...0.2.1)
+
+**Implemented enhancements:**
+
+- Message and content-type fields in logs must not be removed when there are no content to be displayed
+- Security Vulnerability Fixes
+
 ## [0.2.0](https://github.com/IBM/restconf-driver/tree/0.2.0) (2023-03-21)
 
 [Full Changelog](https://github.com/IBM/restconf-driver/compare/0.1.4...0.2.0)
