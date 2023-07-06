@@ -28,21 +28,21 @@ Update the `CHANGELOG.md` file with a list of issues fixed by this release (see 
 
 Commit and push these changes.
 
-## 4. Merge Develop to Master
+## 4. Merge Develop to Main
 
-Development work is normally carried out on the `develop` branch. Merge this branch to `master`, by creating a PR.
+Development work is normally carried out on the `develop` branch. Merge this branch to `main`, by creating a PR.
 
-Then perform the release from the `master` branch. This ensures the `master` branch is tagged correctly.
+Then perform the release from the `main` branch. This ensures the `main` branch is tagged correctly.
 
 > Note: do NOT delete the `develop` branch
 
-## 5. Build and Release (on master)  
+## 5. Build and Release (on main)  
 
 Access the `restconf-driver` build job on the internal CI/CD tool (maintainers should be aware and have access to this. Speak to another maintainer if not).
 
-Navigate to the job for the `master` branch. The merge to `master` should have already triggered a build. Let this build complete in order to verify there were no issues with the merge. The automated job will not complete the release, it will only build and run the unit tests.
+Navigate to the job for the `main` branch. The merge to `main` should have already triggered a build. Let this build complete in order to verify there were no issues with the merge. The automated job will not complete the release, it will only build and run the unit tests.
 
-Once ready, click `Build with Parameters` on the `master` branch job. Enable the `release` option and click `BUILD`.
+Once ready, click `Build with Parameters` on the `main` branch job. Enable the `release` option and click `BUILD`.
 
 Wait for the build to complete successfully.
 
@@ -67,11 +67,11 @@ Verify the release has been published to [icr](icr.io/cp4na-drivers).
 
 Complete steps 1-4 from the main release instructions (found above).
 
-## 5. Build and Release (on master)  
+## 5. Build and Release (on main)  
 
 > Note: Make sure to pull-in the latest and correct tag required for the openjdk image locally before preparing the release build.  
 > e.g  
-> You can find the openjdk image details here: https://github.com/IBM/restconf-driver/blob/master/src/main/resources/docker/Dockerfile#L1-L2  
+> You can find the openjdk image details here: https://github.com/IBM/restconf-driver/blob/main/src/main/resources/docker/Dockerfile#L1-L2  
 > `docker pull openjdk:8u302-jre`
 
 Run the following command (the `prod` profile ensures INFO log statements are available in the built code):
