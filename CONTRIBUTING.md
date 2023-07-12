@@ -50,7 +50,7 @@ When requesting a feature, please include:
 
 ## Submitting Changes
 
-If you intend to contribute changes to this project, be sure to read the [developer docs](https://github.com/IBM/restconf-driver/blob/master/developer_docs/dev-env.md) to set up your local development environment.
+If you intend to contribute changes to this project, be sure to read the [developer docs](https://github.com/IBM/restconf-driver/blob/main/developer_docs/dev-env.md) to set up your local development environment.
 
 Before submitting changes, please complete the following:
 
@@ -60,15 +60,15 @@ Before submitting changes, please complete the following:
 
 When working on the changes, please complete the following:
 
-- Create a branch for your work based off the `develop` branch (**not** `master`). The `develop` branch is used for ongoing development and is merged to `master` when releases are finalised. 
+- Create a branch for your work based off the `develop` branch (**not** `main`). The `develop` branch is used for ongoing development and is merged to `main` when releases are finalised. 
 
 - Name your branch `issue/<issue number>` where `issue number` corresponds to the unique ID of the issue e.g. work on [issue#115] was completed on branch [issue/115]
 
 - Include relevant tests along with your code changes. Tests are organised by package and module under `tests/unit`, so if you changed a module, find it's corresponding test file (if there isn't one, create one).
 
-- Read the [testing docs](https://github.com/IBM/restconf-driver/blob/master/developer_docs/testing.md) for instructions on how to run the unit tests. Make sure these pass before raising your PR
+- Read the [testing docs](https://github.com/IBM/restconf-driver/blob/main/developer_docs/testing.md) for instructions on how to run the unit tests. Make sure these pass before raising your PR
 
-- Read the [docker build](https://github.com/IBM/restconf-driver/blob/master/developer_docs/docker-image.md) and [helm chart build](https://github.com/IBM/restconf-driver/blob/master/developer_docs/helm-chart.md) docs for instructions on how to build the necessary artifacts to run a modified version of the driver on OCP/Kubernetes.
+- Read the [docker build](https://github.com/IBM/restconf-driver/blob/main/developer_docs/docker-image.md) and [helm chart build](https://github.com/IBM/restconf-driver/blob/main/developer_docs/helm-chart.md) docs for instructions on how to build the necessary artifacts to run a modified version of the driver on OCP/Kubernetes.
 
  When submitting a pull request, please complete the following:
 
