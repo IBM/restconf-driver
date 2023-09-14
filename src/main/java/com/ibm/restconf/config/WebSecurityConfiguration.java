@@ -2,37 +2,36 @@ package com.ibm.restconf.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration("WebSecurityConfiguration")
 @EnableWebSecurity
-public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfiguration {
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                    .authorizeRequests()
-                    .antMatchers("/**").hasRole("USER")
-                    .antMatchers("/management/**").hasRole("USER")
-                    .anyRequest().denyAll()
-                    .and()
-                    .httpBasic();
+    @Bean("securityConfigSecurityFilterChain")
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(
+                (requests) -> requests.requestMatchers("/**").hasRole("USER")
+                .requestMatchers("/management/**").hasRole("USER")
+                .anyRequest().denyAll())
+                .httpBasic(Customizer.withDefaults())
+                .build();
+
     }
 
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/api/**", "/management/health", "/management/info");
+    @Bean("securityConfigWebSecurityCustomizer")
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/api/**", "/management/health", "/management/info");
     }
 
     @Bean
-    @Override
-    public UserDetailsService userDetailsService() {
+    public InMemoryUserDetailsManager userDetailsService() {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
         manager.createUser(User.withDefaultPasswordEncoder().username("user").password("password").roles("USER").build());
         manager.createUser(User.withDefaultPasswordEncoder().username("user_with_no_roles").password("password").roles("NONE").build());
