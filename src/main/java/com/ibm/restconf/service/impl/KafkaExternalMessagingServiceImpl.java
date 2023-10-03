@@ -1,6 +1,7 @@
 package com.ibm.restconf.service.impl;
 
 import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
 
 import com.ibm.restconf.config.RCDriverProperties;
 import com.ibm.restconf.model.LcmOpOccPollingRequest;
@@ -14,7 +15,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,16 +41,28 @@ public class KafkaExternalMessagingServiceImpl implements ExternalMessagingServi
         try {
             final String message = objectMapper.writeValueAsString(request);
             if (tenantId == null) {
-                ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(properties.getTopics().getLifecycleResponsesTopic(), message);
-                future.addCallback(sendResult -> logger.debug("ExecutionAsyncResponse successfully sent"),
-                        exception -> logger.warn("Exception sending ExecutionAsyncResponse", exception));
+                CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(properties.getTopics().getLifecycleResponsesTopic(), message);
+                future.whenComplete((sendResult, ex) -> {
+                    if (ex == null) {
+                        logger.debug("ExecutionAsyncResponse successfully sent");
+                    } else {
+                        logger.warn("Exception sending ExecutionAsyncResponse", ex);
+                    }
+
+                });
             } else{
                 logger.info("tenantId in Kafka==> " + tenantId);
                 ProducerRecord<String, String> producerRecord = new ProducerRecord<>(properties.getTopics().getLifecycleResponsesTopic(), message);
                 producerRecord.headers().add(TENANTID, tenantId.getBytes());
-                ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(producerRecord);
-                future.addCallback(sendResult -> logger.debug("ExecutionAsyncResponse successfully sent"),
-                        exception -> logger.warn("Exception sending ExecutionAsyncResponse", exception));
+                CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(producerRecord);
+                future.whenComplete((sendResult, ex) -> {
+                    if (ex == null) {
+                        logger.debug("ExecutionAsyncResponse successfully sent");
+                    } else {
+                        logger.warn("Exception sending ExecutionAsyncResponse", ex);
+                    }
+
+                });
             }
         } catch (JsonProcessingException e) {
             logger.warn("Exception generating message text from ExecutionAsyncResponse", e);
@@ -78,10 +90,15 @@ public class KafkaExternalMessagingServiceImpl implements ExternalMessagingServi
                 logger.error("Thread interrupted during sleep", e);
             }
             final String message = objectMapper.writeValueAsString(request);
-            ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(properties.getTopics().getLcmOpOccPollingTopic(), message);
+            CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(properties.getTopics().getLcmOpOccPollingTopic(), message);
 
-            future.addCallback(sendResult -> logger.debug("Submitted request to poll for LcmOpOcc [{}]", request.getVnfLcmOpOccId()),
-                    exception -> logger.warn("Exception sending LcmOpOccPollingRequest", exception));
+            future.whenComplete((sendResult, ex) -> {
+                if (ex == null) {
+                    logger.debug("Submitted request to poll for LcmOpOcc [{}]", request.getVnfLcmOpOccId());
+                } else {
+                    logger.warn("Exception sending LcmOpOccPollingRequest", ex);
+                }
+            });
         } catch (JsonProcessingException e) {
             logger.warn("Exception generating message text from LcmOpOccPollingRequest", e);
         }

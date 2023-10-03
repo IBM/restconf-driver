@@ -40,14 +40,14 @@ public class CookieAuthenticatedRestTemplate extends RestTemplate {
         HttpCookie sessionCookie = context.getSessionCookie();
         RuntimeException rethrow;
         try {
-            return super.doExecute(url, method, requestCallback, responseExtractor);
+            return super.doExecute(url, null,  method, requestCallback, responseExtractor);
         } catch (HttpClientErrorException.Unauthorized e) {
             // Should we check for the WWW-Authenticate header here?
             rethrow = e;
         }
         if (sessionCookie != null) {
             context.setSessionCookie(null);
-            return super.doExecute(url, method, requestCallback, responseExtractor);
+            return super.doExecute(url, null, method, requestCallback, responseExtractor);
         }
         throw rethrow;
     }

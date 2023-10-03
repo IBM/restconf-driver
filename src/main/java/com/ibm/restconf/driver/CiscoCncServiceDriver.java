@@ -112,7 +112,7 @@ public class CiscoCncServiceDriver {
             throw e;
         }
         LoggingUtils.logEnabledMDC(responseEntity.getBody(), MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.TEXT_PLAIN_VALUE, "http",
-                RequestResponseLogUtils.getResponseReceivedProtocolMetaData(responseEntity.getStatusCodeValue(), responseEntity.getStatusCode().getReasonPhrase(), responseEntity.getHeaders()),driverRequestId);
+                RequestResponseLogUtils.getResponseReceivedProtocolMetaData(responseEntity.getStatusCode().value(), HttpStatus.valueOf(responseEntity.getStatusCode().value()).getReasonPhrase(), responseEntity.getHeaders()),driverRequestId);
         checkResponseEntityMatches(responseEntity, HttpStatus.CREATED, true);
         return responseEntity.getBody();
     }
@@ -155,7 +155,7 @@ public class CiscoCncServiceDriver {
         }
         JWTToken jwtToken = responseEntity.getBody();
         LoggingUtils.logEnabledMDC(RequestResponseLogUtils.convertToJson(jwtToken), MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),MediaType.APPLICATION_JSON_VALUE, "http",
-                RequestResponseLogUtils.getResponseReceivedProtocolMetaData(responseEntity.getStatusCodeValue(), responseEntity.getStatusCode().getReasonPhrase(), responseEntity.getHeaders()),driverRequestId);
+                RequestResponseLogUtils.getResponseReceivedProtocolMetaData(responseEntity.getStatusCode().value(), HttpStatus.valueOf(responseEntity.getStatusCode().value()).getReasonPhrase(), responseEntity.getHeaders()),driverRequestId);
         checkResponseEntityMatches(responseEntity, HttpStatus.CREATED, true);
         if(jwtToken != null) {
             return jwtToken.getToken();
@@ -253,7 +253,7 @@ public class CiscoCncServiceDriver {
         }
 
         LoggingUtils.logEnabledMDC("", MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(), "", "http",
-                RequestResponseLogUtils.getResponseReceivedProtocolMetaData(responseEntity.getStatusCodeValue(), responseEntity.getStatusCode().getReasonPhrase(), responseEntity.getHeaders()),driverRequestId);
+                RequestResponseLogUtils.getResponseReceivedProtocolMetaData(responseEntity.getStatusCode().value(), HttpStatus.valueOf(responseEntity.getStatusCode().value()).getReasonPhrase(), responseEntity.getHeaders()),driverRequestId);
         checkResponseEntityMatches(responseEntity, HttpStatus.CREATED, false);
     }
 
@@ -299,7 +299,7 @@ public class CiscoCncServiceDriver {
             throw e;
         }
         LoggingUtils.logEnabledMDC("",MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(), "", "http",
-                RequestResponseLogUtils.getResponseReceivedProtocolMetaData(responseEntity.getStatusCodeValue(), responseEntity.getStatusCode().getReasonPhrase(), responseEntity.getHeaders()), driverRequestId);
+                RequestResponseLogUtils.getResponseReceivedProtocolMetaData(responseEntity.getStatusCode().value(), HttpStatus.valueOf(responseEntity.getStatusCode().value()).getReasonPhrase(), responseEntity.getHeaders()), driverRequestId);
         checkResponseEntityMatches(responseEntity, HttpStatus.NO_CONTENT, false);
     }
 
@@ -344,7 +344,7 @@ public class CiscoCncServiceDriver {
         }
 
         LoggingUtils.logEnabledMDC("", MessageType.RESPONSE,MessageDirection.RECEIVED,uuid.toString(),"", "http",
-                RequestResponseLogUtils.getResponseReceivedProtocolMetaData(responseEntity.getStatusCodeValue(), responseEntity.getStatusCode().getReasonPhrase(), responseEntity.getHeaders()), driverRequestId);
+                RequestResponseLogUtils.getResponseReceivedProtocolMetaData(responseEntity.getStatusCode().value(), HttpStatus.valueOf(responseEntity.getStatusCode().value()).getReasonPhrase(), responseEntity.getHeaders()), driverRequestId);
         checkResponseEntityMatches(responseEntity, HttpStatus.NO_CONTENT, false);
     }
 
