@@ -30,7 +30,7 @@
         <docker-maven-plugin.version>1.2.2</docker-maven-plugin.version>
         <docker.directory>docker-ready</docker.directory>
         <docker.registry>icr.io/cp4na-drivers</docker.registry>
-        <guava.version>30.0-jre</guava.version>
+        <guava.version>32.0.0-jre</guava.version>
         <helm.chart.name>${project.artifactId}</helm.chart.name>
         <helm.download.url>https://get.helm.sh/${helm-client-executable}</helm.download.url>
         <helm.repo.addr>https://repo.helm.com</helm.repo.addr>
@@ -162,11 +162,15 @@
             <artifactId>spring-kafka-test</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial.snappy</groupId>
+            <artifactId>snappy-java</artifactId>
+            <version>1.1.10.5</version>
         </dependency>
         <dependency>
             <groupId>org.yaml</groupId>
