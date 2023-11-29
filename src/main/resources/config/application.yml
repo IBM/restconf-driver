@@ -4,14 +4,18 @@ management:
             base-path: /management
             exposure:
                 include: "*"
-    metrics:
+    graphite:
+      metrics:
         export:
-            graphite:
-                enabled: false
-            prometheus:
-                enabled: true
-            simple:
-                enabled: false
+          enabled: false
+    prometheus:
+      metrics:
+        export:
+          enabled: true
+    simple:
+      metrics:
+        export:
+          enabled: false
 
 spring:
   main:
