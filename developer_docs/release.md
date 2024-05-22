@@ -46,7 +46,19 @@ Once ready, click `Build with Parameters` on the `main` branch job. Enable the `
 
 Wait for the build to complete successfully.
 
-## 6. Verify Release
+The build will generate the release candidate artifacts and publish them to an internal registry (as above, maintainers should be aware and have access to this. Speak to another maintainer if not).
+
+## 6. Artifact promotion
+
+When the release artifacts are ready to be published, access the `Promote-Drivers` build job on the internal CI/CD tool
+
+Click `Build with Parameters` and enter the version numbers of the drivers that you wish to promote and click `BUILD`.
+
+Wait for the build to complete successfully.
+
+The job will publish the artifacts and create a [release on Github](https://github.com/IBM/restconf-driver/releases).
+
+## 7. Verify Release
 
 Verify the CI/CD job has created a [release on Github](https://github.com/IBM/restconf-driver/releases).
 
