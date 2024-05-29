@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.3.2](https://github.com/IBM/restconf-driver/tree/0.3.2) (2024-05-29)
+
+[Full Changelog](https://github.com/IBM/restconf-driver/compare/0.3.1...0.3.2)
+
+**Implemented enhancements:**
+
+- Fixed security vulnerabilities in base os image [\#147](https://github.com/IBM/restconf-driver/issues/147)
+
 ## [0.3.1](https://github.com/IBM/restconf-driver/tree/0.3.1) (2024-01-18)
 
 [Full Changelog](https://github.com/IBM/restconf-driver/compare/0.3.0...0.3.1)
