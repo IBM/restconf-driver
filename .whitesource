@@ -1,4 +1,8 @@
 {
-  "settingsInheritedFrom": "TNC/whitesource-config@main"
+  "settingsInheritedFrom": "TNC/whitesource-config@main",
+  "issueSettings": {
+    "customLabels": ["FoundBy:Mend"],
+    "assignees": ["Lokanadham-Nalla1"]
+  }
 } 
 
