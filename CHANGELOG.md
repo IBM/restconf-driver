@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.3.4](https://github.com/IBM/restconf-driver/tree/0.3.4) (2024-07-17)
+
+[Full Changelog](https://github.com/IBM/restconf-driver/compare/0.3.3...0.3.4)
+
+**Implemented enhancements:**
+
+- Uplifted SpringBoot to 3.3.0 and spring-cloud-starter to 4.1.3 to fix security vulnerabilities
+
 ## [0.3.3](https://github.com/IBM/restconf-driver/tree/0.3.3) (2024-06-18)
 
 [Full Changelog](https://github.com/IBM/restconf-driver/compare/0.3.2...0.3.3)
