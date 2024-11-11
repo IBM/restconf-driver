@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.3.5](https://github.com/IBM/restconf-driver/tree/0.3.5) (2024-11-11)
+
+[Full Changelog](https://github.com/IBM/restconf-driver/compare/0.3.4...0.3.5)
+
+**Implemented enhancements:**
+
+- Rebuild to pick up security patches for CVE-2024-45490 CVE-2024-45491 CVE-2024-45492 RHSA-2024:6989
+  
 ## [0.3.4](https://github.com/IBM/restconf-driver/tree/0.3.4) (2024-07-17)
 
 [Full Changelog](https://github.com/IBM/restconf-driver/compare/0.3.3...0.3.4)
